@@ -9,7 +9,7 @@ namespace FiriosServer.Controllers
 {
     public class UserController : Controller
     {
-        private string SESSION_NAME = "Session";
+        private const string SESSION_NAME = "Session";
 
         // TODO: Check all password inputs for safe password
         private readonly FiriosSuperLightContext _context;
@@ -53,6 +53,18 @@ namespace FiriosServer.Controllers
             }
             return View();
         }
+        public async Task<IActionResult> Logout()
+        {
+            var userBrowserData = _context.UserBrowserDatas.Include(i => i.UserEntity)
+                .FirstOrDefault(browserData => browserData.Session == Request.Cookies[SESSION_NAME]);
+            if (userBrowserData != null)
+            {
+                _context.Remove(userBrowserData);
+                await _context.SaveChangesAsync();
+                Response.Cookies.Delete(SESSION_NAME);
+            }
+            return View();
+        }
 
         // GET: User
         public async Task<IActionResult> Index()
@@ -60,9 +72,14 @@ namespace FiriosServer.Controllers
             return View(await _context.UserEntity.ToListAsync());
         }
 
+
         // GET: User/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
+            if (!ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             if (id == null)
             {
                 return NotFound();
@@ -185,6 +202,55 @@ namespace FiriosServer.Controllers
         private bool UserEntityExists(Guid id)
         {
             return _context.UserEntity.Any(e => e.Id == id);
+        }
+
+        private UserEntity GetUserFromSession(string session)
+        {
+            var userBrowserData = _context.UserBrowserDatas.Include(i => i.UserEntity)
+                .FirstOrDefault(browserData => browserData.Session == session);
+            return userBrowserData.UserEntity;
+        }
+
+        public bool ValidateUser(UserEntity userEntity, IEnumerable<string> roles)
+        {
+            foreach (var role in roles)
+            {
+                if (role == userEntity.Position)
+                    return true;
+            }
+
+            return false;
+        }
+        public bool ValidateUser(string session, IEnumerable<string> roles)
+        {
+            var userEntity = GetUserFromSession(session);
+            foreach (var role in roles)
+            {
+                if (role == userEntity.Position)
+                    return true;
+            }
+
+            return false;
+        }
+        public bool ValidateUser(HttpRequest httpRequest, IEnumerable<string> roles)
+        {
+            var session = httpRequest.Cookies[SESSION_NAME];
+            if (string.IsNullOrEmpty(session))
+            {
+                return false;
+            }
+            var userEntity = GetUserFromSession(session);
+            if (userEntity == null)
+            {
+                return false;
+            }
+            foreach (var role in roles)
+            {
+                if (role == userEntity.Position)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
