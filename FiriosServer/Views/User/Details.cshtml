@@ -45,14 +45,112 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Position)
-        </dd
+        </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Incidents)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Incidents)
         </dd>
+        <dt class = "col-sm-2">
+            
+            <span> @Html.DisplayNameFor(model => model.Incidents):</span>
+        </dt>
+        <dd class = "col-sm-10">
+        </dd>
+       @* @foreach (var item in Model.Incidents)
+        {
+            <dd class="col-sm-1">
+            </dd>
+            <dd class="col-sm-2">
+                @Html.DisplayFor(modelItem => item.IncidentEntity.Type)
+            </dd>
+            <dd class="col-sm-9">
+                <a asp-action="Details" asp-controller="Incident" asp-route-id="@item.IncidentEntity.Id">@Html.DisplayFor(modelItem => item.IncidentEntity.Date)</a>
+            </dd>
+        }*@
     </dl>
+    
+    @if(Model.Incidents != null || Model.Incidents.Count != 0)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Mpd)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Region)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.SubType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Type)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.ObjectName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.AdditionalInformation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Level)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Date)
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Incidents) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.Mpd)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.Region)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.SubType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.Type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.ObjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.AdditionalInformation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.Level)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.IsActive)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncidentEntity.Date)
+                    </td>
+                    <td>
+                        @*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+    *@                <a asp-action="Details" asp-controller="Incident" asp-route-id="@item.IncidentEntity.Id">Details</a> @*|*@
+                        @*                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+    *@            </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |

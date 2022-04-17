@@ -1,7 +1,6 @@
 ﻿using Firios.Data;
 using FiriosServer.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace FiriosServer.Controllers
@@ -27,20 +26,11 @@ namespace FiriosServer.Controllers
             return View();
         }
 
-        //public IActionResult Login()
-        //{
-        //    return View();
-        //}
-
-        //public IActionResult Registration()
-        //{
-        //    return View();
-        //}
-        public async Task<IActionResult> Users()
+        public IActionResult UserConfirmAction()
         {
-            var users = await _context.UserEntity.ToListAsync();
-            return View(users); return View();
+            return View();
         }
+
         //public IActionResult Technic()
         //{
         //    return View();

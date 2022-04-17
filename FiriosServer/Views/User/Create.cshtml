@@ -7,6 +7,13 @@
 <h1>Create</h1>
 
 <h4>UserEntity</h4>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
 <hr />
 <div class="row">
     <div class="col-md-4">

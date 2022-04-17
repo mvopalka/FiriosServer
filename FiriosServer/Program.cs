@@ -1,11 +1,12 @@
 using Firios.Data;
+using Firios.Mapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlite("Data Source=Firios.db;"));
-//builder.Services.AddTransient<Repository>();
-builder.Services.AddSingleton<WebSocketFirexManager>();
+builder.Services.AddTransient<Repository>();
+builder.Services.AddSingleton<WebSocketFiriosManager>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

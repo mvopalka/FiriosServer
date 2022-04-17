@@ -3,7 +3,7 @@ using System.Net.WebSockets;
 
 namespace Firios.Data;
 
-public class WebSocketFirexManager
+public class WebSocketFiriosManager
 {
     private ConcurrentDictionary<Guid, WebSocket> _subscriptions = new ConcurrentDictionary<Guid, WebSocket>();
 

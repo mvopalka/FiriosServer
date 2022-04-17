@@ -55,6 +55,10 @@ namespace FiriosServer.Controllers
         }
         public async Task<IActionResult> Logout()
         {
+            if (!Request.Cookies.ContainsKey(SESSION_NAME) && string.IsNullOrEmpty(Request.Cookies[SESSION_NAME]))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             var userBrowserData = _context.UserBrowserDatas.Include(i => i.UserEntity)
                 .FirstOrDefault(browserData => browserData.Session == Request.Cookies[SESSION_NAME]);
             if (userBrowserData != null)
@@ -86,6 +90,8 @@ namespace FiriosServer.Controllers
             }
 
             var userEntity = await _context.UserEntity
+                .Include(i => i.Incidents)
+                .ThenInclude(i => i.IncidentEntity)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (userEntity == null)
             {
@@ -110,6 +116,11 @@ namespace FiriosServer.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (await _context.UserEntity.FirstOrDefaultAsync(i => i.Email == userRegistrationModel.Email) != null)
+                {
+                    ViewBag.Error = "Email already exist";
+                    return View(userRegistrationModel);
+                }
                 var userEntity = userRegistrationModel.ToUserEntity();
                 _context.Add(userEntity);
                 await _context.SaveChangesAsync();
