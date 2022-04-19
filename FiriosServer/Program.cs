@@ -1,5 +1,6 @@
 using Firios.Data;
 using Firios.Mapper;
+using FiriosServer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseAuthMiddleware();
 
 app.MapControllers();
 

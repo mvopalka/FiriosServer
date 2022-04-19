@@ -31,15 +31,29 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Incident" asp-action="Index">Incidents</a>
                         </li>
                     </ul>
+                    @if (Context.Items.ContainsKey("user"))
+                    {
+                        <form asp-controller="User" asp-action="Logout" class="form-inline my-2 my-lg-0">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label class="mr-sm-2">@Context.Items["user"]</label>
+                                <input type="submit" value="Logout" class="btn btn-primary my-2 my-sm-0"/>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                    }
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
     <footer class="border-top footer text-muted">
         <div class="container">

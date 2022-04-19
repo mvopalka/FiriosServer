@@ -67,7 +67,7 @@ namespace FiriosServer.Controllers
                 await _context.SaveChangesAsync();
                 Response.Cookies.Delete(SESSION_NAME);
             }
-            return View();
+            return Redirect(nameof(Index));
         }
 
         // GET: User
