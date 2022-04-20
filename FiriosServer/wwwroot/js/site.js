@@ -70,7 +70,7 @@ if ("serviceWorker" in navigator) {
 
                     notification_top_bar.addEventListener("click", () => requestNotificationAccess(reg));
                 }
-            });
+            }).catch(()=>noSupportPWA());
     });
 } else {
     noSupportPWA();
