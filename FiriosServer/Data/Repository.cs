@@ -15,6 +15,15 @@ public class Repository
     }
     public async Task<IncidentModel> SaveUserToIncident(UserToIncidentInputModel from)
     {
+        var userData = await _context.UserBrowserDatas.Include(i => i.UserEntity)
+            .FirstOrDefaultAsync(i => i.Session == from.Session);
+        if (userData == null)
+        {
+            return null;
+        }
+
+        var UserId = userData.UserEntity.Id;
+
         var incidentEntity = _context.IncidentEntity
             .Include(i => i.Users)
             .ThenInclude(i => i.UserEntity)
@@ -23,14 +32,24 @@ public class Repository
         var userEntity = _context.UserEntity
             .Include(i => i.Incidents)
             .ThenInclude(i => i.IncidentEntity)
-            .FirstOrDefault(i => i.Id.Equals(from.UserId));
+            .FirstOrDefault(i => i.Id.Equals(UserId));
+
+        //var incidentEntity = _context.IncidentEntity
+        //    .Include(i => i.Users)
+        //    .ThenInclude(i => i.UserEntity)
+        //    .FirstOrDefault(i => i.Id.Equals(from.IncidentId));
+
+        //var userEntity = _context.UserEntity
+        //    .Include(i => i.Incidents)
+        //    .ThenInclude(i => i.IncidentEntity)
+        //    .FirstOrDefault(i => i.Id.Equals(from.UserId));
 
         if (userEntity == null || incidentEntity == null)
         {
             return null;
         }
 
-        var userIncidentEntity = incidentEntity.Users.FirstOrDefault(i => i.UserId.Equals(from.UserId));
+        var userIncidentEntity = incidentEntity.Users.FirstOrDefault(i => i.UserId.Equals(UserId));
         if (userIncidentEntity == null)
         {
             userIncidentEntity = new UserIncidentEntity

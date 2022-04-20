@@ -26,9 +26,18 @@ namespace FiriosServer.Controllers
             return View();
         }
 
-        public IActionResult UserConfirmAction()
+        public async Task<IActionResult> UserConfirmAction(Guid? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var incidentEntity = await _context.IncidentEntity.FindAsync(id);
+            if (incidentEntity == null)
+            {
+                return NotFound();
+            }
+            return View(incidentEntity);
         }
 
         //public IActionResult Technic()

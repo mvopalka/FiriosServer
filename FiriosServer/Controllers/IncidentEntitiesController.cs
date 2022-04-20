@@ -83,8 +83,14 @@ namespace Firios.Controllers
         [HttpPost("registration")]
         public Task<IncidentModel> Registration(UserToIncidentInputModel data)
         {
-            var incident = _repository.SaveUserToIncident(data);
-            return incident;
+            // TODO return simplier response (potvrzeno a kolik jede?)
+            if (ModelState.IsValid && data.State == "yes" || data.State == "no" || data.State == "on_place")
+            {
+                var incident = _repository.SaveUserToIncident(data);
+                return incident;
+            }
+
+            return null;
         }
 
         [HttpGet("/UserRegistration")]

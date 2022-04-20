@@ -109,43 +109,46 @@
             </thead>
             <tbody>
             @foreach (var item in Model.Incidents) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.Mpd)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.Region)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.Address)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.SubType)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.Type)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.ObjectName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.AdditionalInformation)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.Level)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.IsActive)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IncidentEntity.Date)
-                    </td>
-                    <td>
-                        @*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                @if (item.State == "yes" || item.State == "on_place")
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.Mpd)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.Region)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.SubType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.ObjectName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.AdditionalInformation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.Level)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.IsActive)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IncidentEntity.Date)
+                        </td>
+                        <td>
+                            @*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
     *@                <a asp-action="Details" asp-controller="Incident" asp-route-id="@item.IncidentEntity.Id">Details</a> @*|*@
-                        @*                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            @*                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
     *@            </td>
-                </tr>
+                    </tr>
+                }
             }
             </tbody>
         </table>
