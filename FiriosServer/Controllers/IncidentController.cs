@@ -17,7 +17,9 @@ namespace FiriosServer.Controllers
         // GET: Incident
         public async Task<IActionResult> Index()
         {
-            return View(await _context.IncidentEntity.ToListAsync());
+            var incidents = await _context.IncidentEntity.ToListAsync();
+            incidents.Sort((x, y) => y.Date.CompareTo(x.Date));
+            return View(incidents);
         }
 
         // GET: Incident/Details/5

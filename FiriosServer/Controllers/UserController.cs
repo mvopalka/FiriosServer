@@ -73,7 +73,9 @@ namespace FiriosServer.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UserEntity.ToListAsync());
+            var users = await _context.UserEntity.ToListAsync();
+            users.Sort((x, y) => String.Compare(x.SecondName, y.SecondName));
+            return View(users);
         }
 
 
@@ -97,6 +99,8 @@ namespace FiriosServer.Controllers
             {
                 return NotFound();
             }
+
+            userEntity.Incidents.Sort((x, y) => y.IncidentEntity.Date.CompareTo(x.IncidentEntity.Date));
 
             return View(userEntity);
         }

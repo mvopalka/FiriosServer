@@ -121,7 +121,7 @@ namespace Firios.Controllers
             while (!result.CloseStatus.HasValue)
             {
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                // TODO What to do if client send something
+                // TODO What to do if client send something //UPDATE he propably 
 
             }
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
