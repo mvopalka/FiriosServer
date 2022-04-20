@@ -26,15 +26,6 @@ namespace FiriosServer.Controllers
             return View();
         }
 
-        public IActionResult PushNotificationReqistration()
-        {
-            return View();
-        }
-        public IActionResult PushNotificationReqistration((string session, string endpoint, string p256dh, string auth) input) //Todo to model and implement
-        {
-            return View();
-        }
-
         public async Task<IActionResult> UserConfirmAction(Guid? id)
         {
             if (id == null)

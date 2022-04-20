@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net.WebSockets;
 using System.Text;
+using WebPush;
 
 namespace Firios.Controllers
 {
@@ -18,13 +19,15 @@ namespace Firios.Controllers
         private readonly Repository _repository;
         private readonly WebSocketFiriosManager _manager;
         private readonly ILogger<IncidentEntitiesController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public IncidentEntitiesController(FiriosSuperLightContext context, Repository repository, WebSocketFiriosManager manager, ILogger<IncidentEntitiesController> logger)
+        public IncidentEntitiesController(FiriosSuperLightContext context, Repository repository, WebSocketFiriosManager manager, ILogger<IncidentEntitiesController> logger, IConfiguration configuration)
         {
             _context = context;
             _repository = repository;
             _manager = manager;
             _logger = logger;
+            _configuration = configuration;
         }
 
         // GET: api/IncidentEntities
@@ -70,6 +73,30 @@ namespace Firios.Controllers
             };
             _context.IncidentEntity.Add(incidentEntity);
             await _context.SaveChangesAsync();
+
+            foreach (var userBrowserData in await _context.UserBrowserDatas.ToListAsync())
+            {
+                if (!string.IsNullOrEmpty(userBrowserData.Auth) && !string.IsNullOrEmpty(userBrowserData.Endpoint) && !string.IsNullOrEmpty(userBrowserData.P256dh))
+                {
+                    var subscription = new PushSubscription(userBrowserData.Endpoint, userBrowserData.P256dh, userBrowserData.Auth);
+                    var subject = _configuration["Vapid:subject"];
+                    var publicKey = _configuration["Vapid:publicKey"];
+                    var privateKey = _configuration["Vapid:privateKey"];
+
+                    var vapidDetails = new VapidDetails(subject, publicKey, privateKey);
+
+                    var webPushClient = new WebPushClient();
+                    try
+                    {
+                        await webPushClient.SendNotificationAsync(subscription, incidentEntity.Id.ToString(), vapidDetails);
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.LogError(exception.Message);
+                    }
+                }
+            }
+
 
             var serverMsg = Encoding.UTF8.GetBytes(incidentEntity.Id.ToString());
             foreach (var webSocket in _manager.GetAll())
@@ -125,6 +152,29 @@ namespace Firios.Controllers
 
             }
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+        }
+        [HttpPost("PushRegistration")]
+        public async Task<IActionResult> PushNotificationRegistration(UserPushData userPushData) //Todo to model and implement
+        {
+            if (ModelState.IsValid)
+            {
+                var userBrowserData = _context.UserBrowserDatas.FirstOrDefault(i => i.Session == userPushData.Session);
+                if (userBrowserData == null)
+                {
+                    return BadRequest();
+                }
+
+                userBrowserData.Auth = userPushData.Auth;
+                userBrowserData.Endpoint = userPushData.Endpoint;
+                userBrowserData.P256dh = userPushData.P256dh;
+
+                _context.Update(userBrowserData);
+                await _context.SaveChangesAsync();
+
+                userBrowserData = _context.UserBrowserDatas.FirstOrDefault(i => i.Session == userPushData.Session);
+                return Ok();
+            }
+            return BadRequest();
         }
 
     }

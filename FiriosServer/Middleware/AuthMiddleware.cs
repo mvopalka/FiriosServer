@@ -13,7 +13,7 @@ public class AuthMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, FiriosSuperLightContext dbcontext)
+    public async Task InvokeAsync(HttpContext context, FiriosSuperLightContext dbcontext, IConfiguration configuration)
     {
         if (context.Request.Cookies.ContainsKey(SESSION_NAME))
         {
@@ -23,6 +23,7 @@ public class AuthMiddleware
             if (userBrowserData != null)
             {
                 context.Items.Add("user", userBrowserData.UserEntity.Email);
+                context.Items.Add("PWA_ServerKey", configuration["Vapid:publicKey"]);
             }
         }
 

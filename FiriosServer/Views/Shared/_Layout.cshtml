@@ -15,63 +15,64 @@
 
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FiriosServer</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
-                        </li><li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Incident" asp-action="Index">Incidents</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PushNotificationReqistration">Notifikace</a>
-                        </li>
-                    </ul>
-                    @if (Context.Items.ContainsKey("user"))
-                    {
-                        <form asp-controller="User" asp-action="Logout" class="form-inline my-2 my-lg-0">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label class="mr-sm-2">@Context.Items["user"]</label>
-                                <input type="submit" value="Logout" class="btn btn-primary my-2 my-sm-0"/>
-                            </div>
-                        </form>
-                    }
-                    else
-                    {
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
-                    }
-                </div>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FiriosServer</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Incident" asp-action="Index">Incidents</a>
+                    </li>
+                </ul>
+                @if (Context.Items.ContainsKey("user"))
+                {
+                    <span style="display: none" id="PWA_ServerKey">@Context.Items["PWA_ServerKey"]</span>
+                    <button type="button" id="notificationTopMenu" class="btn btn-outline-primary" style="margin-right: 5px">Notifications</button>
+
+                    <form asp-controller="User" asp-action="Logout" class="form-inline my-2 my-lg-0">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="mr-sm-2">@Context.Items["user"]</label>
+                            <input type="submit" value="Logout" class="btn btn-primary my-2 my-sm-0"/>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                }
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
 <div class="container">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
 </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - FiriosServer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2022 - FiriosServer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+</footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
