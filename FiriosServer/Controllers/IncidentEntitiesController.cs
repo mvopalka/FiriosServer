@@ -156,16 +156,8 @@ namespace Firios.Controllers
         [HttpPost("PushRegistration")]
         public async Task<IActionResult> PushNotificationRegistration(UserPushData userPushData) //Todo to model and implement
         {
-
             if (ModelState.IsValid)
             {
-                //if (await userPushDataJustOne(userPushData))
-                //{
-                //    return Ok();
-                //}
-
-
-
                 var isSaved = false;
                 var browserDatas = _context.UserBrowserDatas.Where(i => i.Auth == userPushData.Auth && i.Endpoint == userPushData.Endpoint && i.P256dh == userPushData.P256dh).ToList();
                 foreach (var browserData in browserDatas)
@@ -186,8 +178,6 @@ namespace Firios.Controllers
                     return Ok();
                 }
 
-
-
                 var userBrowserData = await _context.UserBrowserDatas.FirstOrDefaultAsync(i => i.Session == userPushData.Session);
                 if (userBrowserData == null)
                 {
@@ -204,26 +194,5 @@ namespace Firios.Controllers
             }
             return BadRequest();
         }
-
-        //public async Task<bool> userPushDataJustOne(UserPushData userPushData)
-        //{
-        //    var isSaved = false;
-        //    var browserDatas = _context.UserBrowserDatas.Where(i => i.Auth == userPushData.Auth && i.Endpoint == userPushData.Endpoint && i.P256dh == userPushData.P256dh).ToList();
-        //    foreach (var browserData in browserDatas)
-        //    {
-        //        if (browserData.Session != userPushData.Session)
-        //        {
-        //            _context.Remove(browserData);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        else
-        //        {
-        //            isSaved = true;
-        //        }
-        //    }
-
-        //    return isSaved;
-        //}
-
     }
 }
