@@ -5,6 +5,7 @@ using Firios.Model;
 using Firios.Model.WithoutList;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using System.Net.WebSockets;
 using System.Text;
 using WebPush;
@@ -74,6 +75,15 @@ namespace Firios.Controllers
             _context.IncidentEntity.Add(incidentEntity);
             await _context.SaveChangesAsync();
 
+            // Call push service
+            var incidentPushData = new ServerPushData
+            {
+                id = incidentEntity.Id.ToString(),
+                message = incidentEntity.Mpd + " " + incidentEntity.Type + " " + incidentEntity.SubType,
+                smsSentAt = incidentEntity.Date.ToString(),
+                serverReceiveDate = DateTime.Now.ToString(),
+
+            };
             foreach (var userBrowserData in await _context.UserBrowserDatas.ToListAsync())
             {
                 if (!string.IsNullOrEmpty(userBrowserData.Auth) && !string.IsNullOrEmpty(userBrowserData.Endpoint) && !string.IsNullOrEmpty(userBrowserData.P256dh))
@@ -86,9 +96,10 @@ namespace Firios.Controllers
                     var vapidDetails = new VapidDetails(subject, publicKey, privateKey);
 
                     var webPushClient = new WebPushClient();
+                    incidentPushData.session = userBrowserData.Session;
                     try
                     {
-                        await webPushClient.SendNotificationAsync(subscription, incidentEntity.Id.ToString(), vapidDetails);
+                        await webPushClient.SendNotificationAsync(subscription, incidentPushData.ToJson(), vapidDetails);
                     }
                     catch (Exception exception)
                     {
@@ -97,6 +108,7 @@ namespace Firios.Controllers
                 }
             }
 
+            // Call websockets
 
             var serverMsg = Encoding.UTF8.GetBytes(incidentEntity.Id.ToString());
             foreach (var webSocket in _manager.GetAll())

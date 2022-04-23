@@ -22,17 +22,22 @@ public class Repository
             return null;
         }
 
-        var UserId = userData.UserEntity.Id;
+        var userId = userData.UserEntity.Id;
 
         var incidentEntity = _context.IncidentEntity
             .Include(i => i.Users)
             .ThenInclude(i => i.UserEntity)
             .FirstOrDefault(i => i.Id.Equals(from.IncidentId));
 
+        if (incidentEntity is { IsActive: false })
+        {
+            return null;
+        }
+
         var userEntity = _context.UserEntity
             .Include(i => i.Incidents)
             .ThenInclude(i => i.IncidentEntity)
-            .FirstOrDefault(i => i.Id.Equals(UserId));
+            .FirstOrDefault(i => i.Id.Equals(userId));
 
         //var incidentEntity = _context.IncidentEntity
         //    .Include(i => i.Users)
@@ -49,7 +54,7 @@ public class Repository
             return null;
         }
 
-        var userIncidentEntity = incidentEntity.Users.FirstOrDefault(i => i.UserId.Equals(UserId));
+        var userIncidentEntity = incidentEntity.Users.FirstOrDefault(i => i.UserId.Equals(userId));
         if (userIncidentEntity == null)
         {
             userIncidentEntity = new UserIncidentEntity

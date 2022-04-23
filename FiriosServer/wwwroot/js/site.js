@@ -111,7 +111,7 @@ function SendPushServiceFields(sub) {
         "P256dh": arrayBufferToBase64(sub.getKey("p256dh")),
         "Auth": arrayBufferToBase64(sub.getKey("auth")),
         "Session": getSession()
-    }
+    };
     fetch('/api/IncidentEntities/PushRegistration',
             {
                 method: 'POST', // or 'PUT'
