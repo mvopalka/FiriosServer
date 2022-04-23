@@ -12,22 +12,22 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="table-2-hide">
                 @Html.DisplayNameFor(model => model.Titules)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FirstName)
             </th>
-            <th>
+            <th class="table-2-hide">
                 @Html.DisplayNameFor(model => model.MiddleName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.SecondName)
             </th>
-            <th>
+            <th class="table-3-hide">
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th>
+            <th class="table-4-hide">
                 @Html.DisplayNameFor(model => model.Position)
             </th>
             <th></th>
@@ -36,22 +36,22 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
+            <td class="table-2-hide">
                 @Html.DisplayFor(modelItem => item.Titules)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FirstName)
             </td>
-            <td>
+            <td class="table-2-hide">
                 @Html.DisplayFor(modelItem => item.MiddleName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SecondName)
             </td>
-            <td>
+            <td class="table-3-hide">
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
+            <td class="table-4-hide">
                 @Html.DisplayFor(modelItem => item.Position)
             </td>
             <td>

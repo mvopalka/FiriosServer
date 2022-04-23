@@ -48,14 +48,18 @@
         </dd>
         <dt class = "col-sm-2">
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
         </dd>
-        <dt class = "col-sm-2">
+        @if (Model.Incidents != null && Model.Incidents.Count != 0)
+        {
+            <dt class = "col-sm-2">
             
-            <span> @Html.DisplayNameFor(model => model.Incidents):</span>
-        </dt>
-        <dd class = "col-sm-10">
-        </dd>
+                <span> @Html.DisplayNameFor(model => model.Incidents):</span>
+            </dt>
+            <dd class = "col-sm-10">
+            </dd>
+        }
+
        @* @foreach (var item in Model.Incidents)
         {
             <dd class="col-sm-1">
@@ -69,36 +73,36 @@
         }*@
     </dl>
     
-    @if(Model.Incidents != null || Model.Incidents.Count != 0)
+    @if(Model.Incidents != null && Model.Incidents.Count != 0)
     {
         <table class="table">
             <thead>
             <tr>
-                <th>
+                <th class="table-4-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Mpd)
                 </th>
-                <th>
+                <th class="table-4-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Region)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Address)
                 </th>
-                <th>
+                <th class="table-3-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.SubType)
                 </th>
-                <th>
+                <th class="table-5-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Type)
                 </th>
-                <th>
+                <th class="table-2-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.ObjectName)
                 </th>
-                <th>
+                <th class="table-2-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.AdditionalInformation)
                 </th>
-                <th>
+                <th class="table-3-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.Level)
                 </th>
-                <th>
+                <th class="table-2-hide">
                     @Html.DisplayNameFor(model => model.Incidents[0].IncidentEntity.IsActive)
                 </th>
                 <th>
@@ -112,31 +116,31 @@
                 @if (item.State == "yes" || item.State == "on_place")
                 {
                     <tr>
-                        <td>
+                        <td class="table-4-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.Mpd)
                         </td>
-                        <td>
+                        <td class="table-4-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.Region)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.IncidentEntity.Address)
                         </td>
-                        <td>
+                        <td class="table-3-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.SubType)
                         </td>
-                        <td>
+                        <td class="table-5-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.Type)
                         </td>
-                        <td>
+                        <td class="table-2-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.ObjectName)
                         </td>
-                        <td>
+                        <td class="table-2-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.AdditionalInformation)
                         </td>
-                        <td>
+                        <td class="table-3-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.Level)
                         </td>
-                        <td>
+                        <td class="table-2-hide">
                             @Html.DisplayFor(modelItem => item.IncidentEntity.IsActive)
                         </td>
                         <td>

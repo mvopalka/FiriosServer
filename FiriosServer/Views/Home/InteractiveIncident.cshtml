@@ -1,0 +1,201 @@
+﻿@model Firios.Entity.IncidentEntity
+
+@{
+    ViewData["Title"] = "InteractiveIncident";
+}
+<style>
+    .container {
+        width:100%;
+        max-width:none;
+        padding-left:1rem;
+        padding-right: 1rem;
+    }
+    dl {
+        margin-bottom: auto;
+    }
+    .bg-success, .bg-warning ,.bg-danger{
+        border-radius: 5px;
+        margin: 1rem 0rem;
+        padding-right: 0.5rem
+    }
+    .card {
+        display:inline-block;
+        width: 7rem;
+        margin: 0.5rem 0rem 0.5rem 0.5rem;
+    }
+    .card-body {
+        padding: 0.5rem;
+
+    }
+    dd {
+        margin-bottom: auto;
+    }
+
+
+</style>
+
+<table class="table w-100 d-block d-md-table">
+    <thead>
+        <tr>
+            <th class="table-4-hide">
+                @Html.DisplayNameFor(model => model.Mpd)
+            </th>
+            <th class="table-5-hide">
+                @Html.DisplayNameFor(model => model.Region)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th class="table-5-hide">
+                @Html.DisplayNameFor(model => model.SubType)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th class="table-6-hide">
+                @Html.DisplayNameFor(model => model.ObjectName)
+            </th>
+            <th class="table-3-hide">
+                @Html.DisplayNameFor(model => model.AdditionalInformation)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+        </tr>
+    </thead>
+<tbody>
+<tr>
+    <td class="table-4-hide">
+        @Html.DisplayFor(modelItem => Model.Mpd)
+    </td>
+    <td class="table-5-hide">
+        @Html.DisplayFor(modelItem => Model.Region)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => Model.Address)
+    </td>
+    <td class="table-5-hide">
+        @Html.DisplayFor(modelItem => Model.SubType)
+    </td>
+    <td class="table-2-hide">
+        @Html.DisplayFor(modelItem => Model.Type)
+    </td>
+    <td class="table-6-hide">
+        @Html.DisplayFor(modelItem => Model.ObjectName)
+    </td>
+    <td class="table-3-hide">
+        @Html.DisplayFor(modelItem => Model.AdditionalInformation)
+    </td>
+    <td class="table-2-hide">
+        @Html.DisplayFor(modelItem => Model.Level)
+    </td>
+</tr>
+</tbody>
+</table>
+
+<div>
+    <div class="content">
+        <div class="bg-success">
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+
+        </div>
+        <div class="bg-warning">
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+
+        </div>
+        <div class="bg-danger">
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <dl>
+                        <dt>Name: </dt>
+                        <dd>Matěj</dd>
+                        <dt>Pozice</dt>
+                        <dd>Hasič</dd>
+                    </dl>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div>
+@*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+*@</div>

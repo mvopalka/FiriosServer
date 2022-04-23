@@ -25,45 +25,46 @@ function getSession() {
 
 // Service worker registration
 
-function remove_btn_outline(element) {
+function remove_btn_outline(element, addClass) {
+    if (element == null) {
+        return;
+    }
     element.classList.remove("btn-outline-primary");
     element.classList.remove("btn-outline-success");
     element.classList.remove("btn-outline-danger");
     element.classList.remove("btn-outline-warning");
+    notification_top_bar.classList.add(addClass);
 
 }
 
 const notification_top_bar = document.getElementById("notificationTopMenu");
 
 function noSupportPWA() {
-    remove_btn_outline(notification_top_bar);
-    notification_top_bar.classList.add("btn-outline-danger");
+    remove_btn_outline(notification_top_bar, "btn-outline-danger");
 }
 
 function noPermissionSupportPWA() {
-    remove_btn_outline(notification_top_bar);
-    notification_top_bar.classList.add("btn-outline-warning");
+    remove_btn_outline(notification_top_bar, "btn-outline-warning");
 }
 
 function SupportPWA() {
-    remove_btn_outline(notification_top_bar);
-    notification_top_bar.classList.add("btn-outline-success");
+    remove_btn_outline(notification_top_bar, "btn-outline-success");
 }
 
 function DefaultPWA() {
-    remove_btn_outline(notification_top_bar);
-    notification_top_bar.classList.add("btn-outline-primary");
+    remove_btn_outline(notification_top_bar, "btn-outline-primary");
 }
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker.register("/ServiceWorker.js")
             .then((reg) => {
+                console.log(Notification.permission);
                 if (Notification.permission === "granted") {
                     DefaultPWA();
 
                     getSubscription(reg);
-                } else if (Notification.permission === "blocked") {
+                } else if (Notification.permission === "blocked" || Notification.permission === "denied") {
                     noSupportPWA();
                 } else {
                     noPermissionSupportPWA();

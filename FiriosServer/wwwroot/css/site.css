@@ -16,3 +16,33 @@ html {
 body {
   margin-bottom: 60px;
 }
+@media (max-width: 1200px) {
+    .table-1-hide {
+        display: none;
+    }
+}
+@media (max-width: 992px) {
+    .table-2-hide {
+        display: none;
+    }
+}
+@media (max-width: 535px) {
+    .table-3-hide {
+        display: none;
+    }
+}
+@media (max-width: 400px) {
+    .table-4-hide {
+        display: none;
+    }
+}
+@media (max-width: 327px) {
+    .table-5-hide {
+        display: none;
+    }
+}
+@media (max-width: 243px) {
+    .table-6-hide {
+        display: none;
+    }
+}
