@@ -84,16 +84,16 @@ namespace Firios.Controllers
                 serverReceiveDate = DateTime.Now.ToString(),
 
             };
+            var subject = _configuration["Vapid:subject"];
+            var publicKey = _configuration["Vapid:publicKey"];
+            var privateKey = _configuration["Vapid:privateKey"];
+            var vapidDetails = new VapidDetails(subject, publicKey, privateKey);
+
             foreach (var userBrowserData in await _context.UserBrowserDatas.ToListAsync())
             {
                 if (!string.IsNullOrEmpty(userBrowserData.Auth) && !string.IsNullOrEmpty(userBrowserData.Endpoint) && !string.IsNullOrEmpty(userBrowserData.P256dh))
                 {
                     var subscription = new PushSubscription(userBrowserData.Endpoint, userBrowserData.P256dh, userBrowserData.Auth);
-                    var subject = _configuration["Vapid:subject"];
-                    var publicKey = _configuration["Vapid:publicKey"];
-                    var privateKey = _configuration["Vapid:privateKey"];
-
-                    var vapidDetails = new VapidDetails(subject, publicKey, privateKey);
 
                     var webPushClient = new WebPushClient();
                     incidentPushData.session = userBrowserData.Session;
