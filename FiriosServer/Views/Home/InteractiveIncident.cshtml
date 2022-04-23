@@ -1,4 +1,5 @@
-﻿@model Firios.Entity.IncidentEntity
+﻿@using Microsoft.CodeAnalysis.Scripting
+@model Firios.Entity.IncidentEntity
 
 @{
     ViewData["Title"] = "InteractiveIncident";
@@ -63,139 +64,53 @@
             </th>
         </tr>
     </thead>
-<tbody>
-<tr>
-    <td class="table-4-hide">
-        @Html.DisplayFor(modelItem => Model.Mpd)
-    </td>
-    <td class="table-5-hide">
-        @Html.DisplayFor(modelItem => Model.Region)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => Model.Address)
-    </td>
-    <td class="table-5-hide">
-        @Html.DisplayFor(modelItem => Model.SubType)
-    </td>
-    <td class="table-2-hide">
-        @Html.DisplayFor(modelItem => Model.Type)
-    </td>
-    <td class="table-6-hide">
-        @Html.DisplayFor(modelItem => Model.ObjectName)
-    </td>
-    <td class="table-3-hide">
-        @Html.DisplayFor(modelItem => Model.AdditionalInformation)
-    </td>
-    <td class="table-2-hide">
-        @Html.DisplayFor(modelItem => Model.Level)
-    </td>
-</tr>
-</tbody>
+    <tbody>
+        <tr>
+            <td class="table-4-hide">
+                @Html.DisplayFor(modelItem => Model.Mpd)
+            </td>
+            <td class="table-5-hide">
+                @Html.DisplayFor(modelItem => Model.Region)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Address)
+            </td>
+            <td class="table-5-hide">
+                @Html.DisplayFor(modelItem => Model.SubType)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => Model.Type)
+            </td>
+            <td class="table-6-hide">
+                @Html.DisplayFor(modelItem => Model.ObjectName)
+            </td>
+            <td class="table-3-hide">
+                @Html.DisplayFor(modelItem => Model.AdditionalInformation)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => Model.Level)
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 <div>
     <div class="content">
-        <div class="bg-success">
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-
-        </div>
-        <div class="bg-warning">
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-
-        </div>
-        <div class="bg-danger">
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <dl>
-                        <dt>Name: </dt>
-                        <dd>Matěj</dd>
-                        <dt>Pozice</dt>
-                        <dd>Hasič</dd>
-                    </dl>
-                </div>
-            </div>
-
-        </div>
+        <div class="bg-success" id="yes"></div>
+        <div class="bg-warning" id="on_place"></div>
+        <div class="bg-danger" id="no"></div>
     </div>
 </div>
 <div>
-@*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
 *@</div>
+
+
+@section Scripts {
+    <script>
+
+        data = { id: "a24a6ea4-ce75-4665-a070-57453082c256", name: "Josef", surname: "Vopálka", position: "Hasič", action: "on_place" };
+        renderCard(data);
+
+    </script>
+}
