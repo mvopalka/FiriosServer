@@ -1,6 +1,7 @@
 using Firios.Data;
 using Firios.Mapper;
 using FiriosServer;
+using FiriosServer.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
 builder.Services.AddTransient<Repository>();
 builder.Services.AddSingleton<WebSocketFiriosManager>();
+builder.Services.AddTransient<FiriosAuthenticationService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

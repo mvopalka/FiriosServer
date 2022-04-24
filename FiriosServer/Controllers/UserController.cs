@@ -1,6 +1,7 @@
 ﻿#nullable disable
 using Firios.Data;
 using Firios.Entity;
+using FiriosServer.Data;
 using FiriosServer.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,18 +10,22 @@ namespace FiriosServer.Controllers
 {
     public class UserController : Controller
     {
-        private const string SESSION_NAME = "Session";
-
         // TODO: Check all password inputs for safe password
         private readonly FiriosSuperLightContext _context;
+        private readonly FiriosAuthenticationService _authenticationService;
 
-        public UserController(FiriosSuperLightContext context)
+        public UserController(FiriosSuperLightContext context, FiriosAuthenticationService authenticationService)
         {
             _context = context;
+            _authenticationService = authenticationService;
         }
 
         public IActionResult Login()
         {
+            if (!_context.UserEntity.Any())
+            {
+                return RedirectToAction(nameof(Create));
+            }
             return View();
         }
 
@@ -37,7 +42,7 @@ namespace FiriosServer.Controllers
                 if (userEntity != null && userLoginModel.IsValidPassword(userEntity))
                 {
                     string session = userLoginModel.GenerateSessionId(userEntity.Id.ToString());
-                    Response.Cookies.Append(SESSION_NAME, session);
+                    Response.Cookies.Append(FiriosConstants.SESSION_NAME, session);
                     UserBrowserData browserData = new UserBrowserData
                     {
                         Session = session,
@@ -55,17 +60,17 @@ namespace FiriosServer.Controllers
         }
         public async Task<IActionResult> Logout()
         {
-            if (!Request.Cookies.ContainsKey(SESSION_NAME) && string.IsNullOrEmpty(Request.Cookies[SESSION_NAME]))
+            if (!Request.Cookies.ContainsKey(FiriosConstants.SESSION_NAME) && string.IsNullOrEmpty(Request.Cookies[FiriosConstants.SESSION_NAME]))
             {
                 return RedirectToAction(nameof(Login));
             }
             var userBrowserData = _context.UserBrowserDatas.Include(i => i.UserEntity)
-                .FirstOrDefault(browserData => browserData.Session == Request.Cookies[SESSION_NAME]);
+                .FirstOrDefault(browserData => browserData.Session == Request.Cookies[FiriosConstants.SESSION_NAME]);
             if (userBrowserData != null)
             {
                 _context.Remove(userBrowserData);
                 await _context.SaveChangesAsync();
-                Response.Cookies.Delete(SESSION_NAME);
+                Response.Cookies.Delete(FiriosConstants.SESSION_NAME);
             }
             return Redirect(nameof(Index));
         }
@@ -73,6 +78,10 @@ namespace FiriosServer.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             var users = await _context.UserEntity.ToListAsync();
             users.Sort((x, y) => String.Compare(x.SecondName, y.SecondName));
             return View(users);
@@ -82,7 +91,7 @@ namespace FiriosServer.Controllers
         // GET: User/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (!ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -108,6 +117,14 @@ namespace FiriosServer.Controllers
         // GET: User/Create
         public IActionResult Create()
         {
+            if (!_context.UserEntity.Any())
+            {
+                return View();
+            }
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             return View();
         }
 
@@ -118,6 +135,18 @@ namespace FiriosServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Titules,FirstName,MiddleName,SecondName,Email,Password,ConfirmPassword,Position,Id")] UserRegistrationModel userRegistrationModel)
         {
+            if (!_context.UserEntity.Any())
+            {
+                var userEntity = userRegistrationModel.ToUserEntity();
+                userEntity.Position = "Velitel";
+                _context.Add(userEntity);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Login));
+            }
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             if (ModelState.IsValid)
             {
                 if (await _context.UserEntity.FirstOrDefaultAsync(i => i.Email == userRegistrationModel.Email) != null)
@@ -136,6 +165,10 @@ namespace FiriosServer.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             if (id == null)
             {
                 return NotFound();
@@ -156,6 +189,10 @@ namespace FiriosServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Titules,FirstName,MiddleName,SecondName,Email,Password,ConfirmPassword,Position")] UserEditModel userEditModel)
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             //if (id != userEditModel.Id)
             //{
             //    return NotFound();
@@ -163,6 +200,15 @@ namespace FiriosServer.Controllers
             var userEntity = await _context.UserEntity.FindAsync(id);
             if (ModelState.IsValid)
             {
+                if (userEntity.Position == FiriosConstants.VELITEL_JEDNOTKY &&
+                    !String.IsNullOrEmpty(userEditModel.Position) &&
+                    userEditModel.Position != FiriosConstants.VELITEL_JEDNOTKY)
+                {
+                    if (_context.UserEntity.Count(i => i.Position == FiriosConstants.VELITEL_JEDNOTKY) < 2)
+                    {
+                        return View(UserEditModel.From(userEntity));
+                    }
+                }
                 userEntity = userEditModel.ToUserEntity(userEntity);
                 try
                 {
@@ -188,6 +234,11 @@ namespace FiriosServer.Controllers
         // GET: User/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -208,7 +259,15 @@ namespace FiriosServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToAction(nameof(Login));
+            }
             var userEntity = await _context.UserEntity.FindAsync(id);
+            if (userEntity.Position == FiriosConstants.VELITEL_JEDNOTKY && _context.UserEntity.Count(i => i.Position == FiriosConstants.VELITEL_JEDNOTKY) < 2)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             _context.UserEntity.Remove(userEntity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -219,53 +278,53 @@ namespace FiriosServer.Controllers
             return _context.UserEntity.Any(e => e.Id == id);
         }
 
-        private UserEntity GetUserFromSession(string session)
-        {
-            var userBrowserData = _context.UserBrowserDatas.Include(i => i.UserEntity)
-                .FirstOrDefault(browserData => browserData.Session == session);
-            return userBrowserData.UserEntity;
-        }
+        //private UserEntity GetUserFromSession(string session)
+        //{
+        //    var userBrowserData = _context.UserBrowserDatas.Include(i => i.UserEntity)
+        //        .FirstOrDefault(browserData => browserData.Session == session);
+        //    return userBrowserData.UserEntity;
+        //}
 
-        public bool ValidateUser(UserEntity userEntity, IEnumerable<string> roles)
-        {
-            foreach (var role in roles)
-            {
-                if (role == userEntity.Position)
-                    return true;
-            }
+        //public bool ValidateUser(UserEntity userEntity, IEnumerable<string> roles)
+        //{
+        //    foreach (var role in roles)
+        //    {
+        //        if (role == userEntity.Position)
+        //            return true;
+        //    }
 
-            return false;
-        }
-        public bool ValidateUser(string session, IEnumerable<string> roles)
-        {
-            var userEntity = GetUserFromSession(session);
-            foreach (var role in roles)
-            {
-                if (role == userEntity.Position)
-                    return true;
-            }
+        //    return false;
+        //}
+        //public bool ValidateUser(string session, IEnumerable<string> roles)
+        //{
+        //    var userEntity = GetUserFromSession(session);
+        //    foreach (var role in roles)
+        //    {
+        //        if (role == userEntity.Position)
+        //            return true;
+        //    }
 
-            return false;
-        }
-        public bool ValidateUser(HttpRequest httpRequest, IEnumerable<string> roles)
-        {
-            var session = httpRequest.Cookies[SESSION_NAME];
-            if (string.IsNullOrEmpty(session))
-            {
-                return false;
-            }
-            var userEntity = GetUserFromSession(session);
-            if (userEntity == null)
-            {
-                return false;
-            }
-            foreach (var role in roles)
-            {
-                if (role == userEntity.Position)
-                    return true;
-            }
+        //    return false;
+        //}
+        //public bool ValidateUser(HttpRequest httpRequest, IEnumerable<string> roles)
+        //{
+        //    var session = httpRequest.Cookies[SESSION_NAME];
+        //    if (string.IsNullOrEmpty(session))
+        //    {
+        //        return false;
+        //    }
+        //    var userEntity = GetUserFromSession(session);
+        //    if (userEntity == null)
+        //    {
+        //        return false;
+        //    }
+        //    foreach (var role in roles)
+        //    {
+        //        if (role == userEntity.Position)
+        //            return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
     }
 }

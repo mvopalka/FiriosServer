@@ -1,5 +1,6 @@
 ﻿#nullable disable
 using Firios.Data;
+using FiriosServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,15 +9,21 @@ namespace FiriosServer.Controllers
     public class IncidentController : Controller
     {
         private readonly FiriosSuperLightContext _context;
+        private readonly FiriosAuthenticationService _authenticationService;
 
-        public IncidentController(FiriosSuperLightContext context)
+        public IncidentController(FiriosSuperLightContext context, FiriosAuthenticationService authenticationService)
         {
             _context = context;
+            _authenticationService = authenticationService;
         }
 
         // GET: Incident
         public async Task<IActionResult> Index()
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+            }
             var incidents = await _context.IncidentEntity.ToListAsync();
             incidents.Sort((x, y) => y.Date.CompareTo(x.Date));
             return View(incidents);
@@ -25,6 +32,10 @@ namespace FiriosServer.Controllers
         // GET: Incident/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+            }
             if (id == null)
             {
                 return NotFound();

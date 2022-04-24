@@ -1,4 +1,5 @@
 ﻿using Firios.Data;
+using FiriosServer.Data;
 using FiriosServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,11 +10,13 @@ namespace FiriosServer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly FiriosSuperLightContext _context;
+        private readonly FiriosAuthenticationService _authenticationService;
 
-        public HomeController(ILogger<HomeController> logger, FiriosSuperLightContext context)
+        public HomeController(ILogger<HomeController> logger, FiriosSuperLightContext context, FiriosAuthenticationService authenticationService)
         {
             _logger = logger;
             _context = context;
+            _authenticationService = authenticationService;
         }
 
         public IActionResult Index()
@@ -28,6 +31,10 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> UserConfirmAction(Guid? id)
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+            }
             if (id == null)
             {
                 return NotFound();
@@ -57,6 +64,10 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> InteractiveIncident(Guid? id)
         {
+            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            {
+                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+            }
             return View();
         }
 
