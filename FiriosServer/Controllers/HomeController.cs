@@ -57,16 +57,7 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> InteractiveIncident(Guid? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var incidentEntity = await _context.IncidentEntity.FindAsync(id);
-            if (incidentEntity == null)
-            {
-                return NotFound();
-            }
-            return View(incidentEntity);
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

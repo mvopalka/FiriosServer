@@ -9,4 +9,5 @@ public class WebSocketFiriosManager
 
     public ICollection<WebSocket> GetAll() => _subscriptions.Values;
     public void AddNew(Guid id, WebSocket webSocket) => _subscriptions.TryAdd(id, webSocket);
+    public void RemoveById(Guid id) => _subscriptions.TryRemove(id, out _);
 }

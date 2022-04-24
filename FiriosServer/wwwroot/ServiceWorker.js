@@ -61,9 +61,8 @@ self.addEventListener('notificationclick', function (e) {
                 },
                 body: JSON.stringify(requestData),
             })
-            .then(response => response.json())
-            .then(data => {})
             .catch((error) => {
+                console.log(error);
                 clients.openWindow(url);
                 notification.close();
             });

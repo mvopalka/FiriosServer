@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlite("Data Source=Firios.db;"));
-//builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
+//builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlite("Data Source=Firios.db;"));
+builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
 builder.Services.AddTransient<Repository>();
 builder.Services.AddSingleton<WebSocketFiriosManager>();
 

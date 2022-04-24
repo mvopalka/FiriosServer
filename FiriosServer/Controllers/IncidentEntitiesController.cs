@@ -110,7 +110,7 @@ namespace Firios.Controllers
 
             // Call websockets
 
-            var serverMsg = Encoding.UTF8.GetBytes(incidentEntity.Id.ToString());
+            var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel { IncidentWithoutList = incident }).ToJson());
             foreach (var webSocket in _manager.GetAll())
             {
                 await webSocket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length),
@@ -120,16 +120,40 @@ namespace Firios.Controllers
             return incidentEntity;
         }
         [HttpPost("registration")]
-        public Task<IncidentModel> Registration(UserToIncidentInputModel data)
+        public async Task<StatusCodeResult> Registration(UserToIncidentInputModel data)
         {
             // TODO return simplier response (potvrzeno a kolik jede?)
             if (ModelState.IsValid && data.State == "yes" || data.State == "no" || data.State == "on_place")
             {
-                var incident = _repository.SaveUserToIncident(data);
-                return incident;
+                var incident = await _repository.SaveUserToIncident(data);
+                if (incident == null)
+                    return StatusCode(400);
+
+                // Web sockety
+
+                var userBrowser = await _context.UserBrowserDatas.Include(i => i.UserEntity)
+                    .FirstOrDefaultAsync(i => i.Session == data.Session);
+                var user = userBrowser.UserEntity;
+
+                var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel
+                {
+                    Id = user.Id.ToString(),
+                    Action = data.State,
+                    Name = user.FirstName,
+                    Surname = user.SecondName,
+                    Position = user.Position
+                }).ToJson());
+
+                foreach (var webSocket in _manager.GetAll())
+                {
+                    await webSocket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length),
+                        WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, CancellationToken.None);
+                }
+
+                return Ok();
             }
 
-            return null;
+            return StatusCode(400);
         }
 
         [HttpGet("/UserRegistration")]
@@ -153,8 +177,15 @@ namespace Firios.Controllers
 
             // TODO authorization
 
-            _manager.AddNew(new Guid(), webSocket);
-            var serverMsg = Encoding.UTF8.GetBytes($"Authorization OK");
+            var userBrowserData = await _context.UserBrowserDatas.FirstOrDefaultAsync(i => i.Session == Encoding.UTF8.GetString(buffer));
+            if (userBrowserData == null)
+            {
+                await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+            }
+
+            var id = new Guid();
+            _manager.AddNew(id, webSocket);
+            var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel { Status = "ok" }).ToJson());
 
             await webSocket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length), result.MessageType, result.EndOfMessage, CancellationToken.None);
             while (!result.CloseStatus.HasValue)
@@ -163,6 +194,8 @@ namespace Firios.Controllers
                 // TODO What to do if client send something //UPDATE he propably 
 
             }
+
+            _manager.RemoveById(id);
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
         [HttpPost("PushRegistration")]

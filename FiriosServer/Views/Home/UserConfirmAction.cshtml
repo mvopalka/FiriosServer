@@ -84,7 +84,7 @@
             <button type="button" id="on_place" class="btn btn-warning w-100 h-100">Na místo</button>
         </td>
         <td>
-            <button type="button" id="status" class="btn btn-info w-100 h-100">Stav</button>
+            <a asp-action="InteractiveIncident" asp-controller="Home" type="button" id="status" class="btn btn-info w-100 h-100">Stav</a>
         </td>
     </tr>
 </table>
@@ -104,10 +104,6 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
                 })
                 .catch((error) => {
                     console.error('Error:', error);

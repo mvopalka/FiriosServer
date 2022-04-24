@@ -2,8 +2,10 @@
 @model Firios.Entity.IncidentEntity
 
 @{
-    ViewData["Title"] = "InteractiveIncident";
+    ViewData["Title"] = "Výjezd";
 }
+<h3 id="state">@ViewData["Title"]</h3>
+
 <style>
     .container {
         width:100%;
@@ -108,9 +110,28 @@
 
 @section Scripts {
     <script>
+        const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+        var socket = new WebSocket(`wss://${self.location.host}/UserRegistration`);
+        socket.onmessage = message => {
+            data = JSON.parse(message.data);
+            console.log(data);
+            if (data["Status"] != undefined && data["Status"] != null) {
+                if (data["Status"] === "ok") {
+                    document.getElementById("state").classList.add("text-success");
+                } else {
+                    document.getElementById("state").classList.add("text-danger");
+                }
 
-        data = { id: "a24a6ea4-ce75-4665-a070-57453082c256", name: "Josef", surname: "Vopálka", position: "Hasič", action: "on_place" };
-        renderCard(data);
+            }else if (data["IncidentWithoutList"] != undefined && data["IncidentWithoutList"] != null) {
+                document.getElementById("yes").innerHTML = null;
+                document.getElementById("no").innerHTML = null;
+                document.getElementById("on_place").innerHTML = null;
+            } else {
+                renderCard(data);
+            }
+        }
+        socket.onopen = () => socket.send(getSession());
+        socket.onclose = () => console.log("Socket was closed. Myyyyy notify")
 
     </script>
 }
