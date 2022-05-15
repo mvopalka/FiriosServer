@@ -17,6 +17,10 @@ public class FiriosAuthenticationService
     {
         var userBrowserData = _context.UserBrowserDatas.Include(i => i.UserEntity)
             .FirstOrDefault(browserData => browserData.Session == session);
+        if (userBrowserData == null || userBrowserData.UserEntity == null)
+        {
+            return null;
+        }
         return userBrowserData.UserEntity;
     }
 
@@ -33,6 +37,10 @@ public class FiriosAuthenticationService
     public bool ValidateUser(string session, IEnumerable<string> roles)
     {
         var userEntity = GetUserFromSession(session);
+        if (userEntity == null)
+        {
+            return false;
+        }
         foreach (var role in roles)
         {
             if (role == userEntity.Position)

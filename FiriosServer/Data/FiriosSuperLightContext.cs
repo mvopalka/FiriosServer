@@ -14,6 +14,6 @@ namespace Firios.Data
 
         public DbSet<UserEntity> UserEntity { get; set; }
         public DbSet<UserBrowserData> UserBrowserDatas { get; set; }
-        //public DbSet<Firios.Entity.UserIncidentEntity> UserIds { get; set; }
+        public DbSet<UserIncidentEntity> UserIncidentEntity { get; set; }
     }
 }

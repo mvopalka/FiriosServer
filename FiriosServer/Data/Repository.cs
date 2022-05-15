@@ -55,7 +55,10 @@ public class Repository
         }
 
         var userIncidentEntity = incidentEntity.Users.FirstOrDefault(i => i.UserId.Equals(userId));
-        if (userIncidentEntity == null)
+        var existingUserIncidentEntity =
+            await _context.UserIncidentEntity.FirstOrDefaultAsync(i =>
+                i.IncidentId == incidentEntity.Id && i.UserId == userEntity.Id);
+        if (userIncidentEntity == null && existingUserIncidentEntity == null)
         {
             userIncidentEntity = new UserIncidentEntity
             {

@@ -78,7 +78,14 @@ namespace FiriosServer.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.HASIC,
+                        FiriosConstants.STROJNIK,
+                        FiriosConstants.VELITEL,
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -91,7 +98,15 @@ namespace FiriosServer.Controllers
         // GET: User/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            // TODO Chose permissions for this action
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.HASIC,
+                        FiriosConstants.STROJNIK,
+                        FiriosConstants.VELITEL,
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -121,7 +136,11 @@ namespace FiriosServer.Controllers
             {
                 return View();
             }
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -138,16 +157,25 @@ namespace FiriosServer.Controllers
             if (!_context.UserEntity.Any())
             {
                 var userEntity = userRegistrationModel.ToUserEntity();
-                userEntity.Position = "Velitel";
+                userEntity.Position = FiriosConstants.VELITEL_JEDNOTKY;
                 _context.Add(userEntity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Login));
             }
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }
-            if (ModelState.IsValid)
+            if (ModelState.IsValid &&
+                (userRegistrationModel.Position == FiriosConstants.VELITEL_JEDNOTKY ||
+                 userRegistrationModel.Position == FiriosConstants.HASIC ||
+                 userRegistrationModel.Position == FiriosConstants.STROJNIK ||
+                 userRegistrationModel.Position == FiriosConstants.VELITEL ||
+                 userRegistrationModel.Position == FiriosConstants.MONITOR))
             {
                 if (await _context.UserEntity.FirstOrDefaultAsync(i => i.Email == userRegistrationModel.Email) != null)
                 {
@@ -165,7 +193,11 @@ namespace FiriosServer.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -189,7 +221,12 @@ namespace FiriosServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Titules,FirstName,MiddleName,SecondName,Email,Password,ConfirmPassword,Position")] UserEditModel userEditModel)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            // TODO let user to change for example password
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -198,7 +235,11 @@ namespace FiriosServer.Controllers
             //    return NotFound();
             //}
             var userEntity = await _context.UserEntity.FindAsync(id);
-            if (ModelState.IsValid)
+            if (ModelState.IsValid &&
+                (userEditModel.Position == FiriosConstants.VELITEL_JEDNOTKY ||
+                 userEditModel.Position == FiriosConstants.HASIC ||
+                 userEditModel.Position == FiriosConstants.STROJNIK ||
+                 userEditModel.Position == FiriosConstants.VELITEL))
             {
                 if (userEntity.Position == FiriosConstants.VELITEL_JEDNOTKY &&
                     !String.IsNullOrEmpty(userEditModel.Position) &&
@@ -234,7 +275,11 @@ namespace FiriosServer.Controllers
         // GET: User/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -259,7 +304,11 @@ namespace FiriosServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
                 return RedirectToAction(nameof(Login));
             }

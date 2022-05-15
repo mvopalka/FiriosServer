@@ -2,7 +2,7 @@
   "dependencies": {
     "mssql1": {
       "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/firiosserverdbserver/databases/FiriosServer_db",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/firiosserverdbserver/databases/FiriosServer_db",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:AppDbContext"
     }

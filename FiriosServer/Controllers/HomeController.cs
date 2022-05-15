@@ -1,5 +1,6 @@
 ﻿using Firios.Data;
 using FiriosServer.Data;
+using FiriosServer.Extension;
 using FiriosServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -31,9 +32,16 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> UserConfirmAction(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.HASIC,
+                        FiriosConstants.STROJNIK,
+                        FiriosConstants.VELITEL,
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
-                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+                return RedirectToAction(nameof(UserController.Login), FiriosExtensions.GetControllerName<UserController>());
             }
             if (id == null)
             {
@@ -64,9 +72,17 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> InteractiveIncident(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.HASIC,
+                        FiriosConstants.STROJNIK,
+                        FiriosConstants.VELITEL,
+                        FiriosConstants.VELITEL_JEDNOTKY,
+                        FiriosConstants.MONITOR
+                    }))
             {
-                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+                return RedirectToAction(nameof(UserController.Login), FiriosExtensions.GetControllerName<UserController>());
             }
             return View();
         }

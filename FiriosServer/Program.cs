@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
 builder.Services.AddTransient<Repository>();
 builder.Services.AddSingleton<WebSocketFiriosManager>();
+builder.Services.AddSingleton<IncidentId>();
 builder.Services.AddTransient<FiriosAuthenticationService>();
 
 // Add services to the container.

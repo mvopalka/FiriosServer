@@ -3,6 +3,7 @@ using Firios.Entity;
 using Firios.Mapper;
 using Firios.Model;
 using Firios.Model.WithoutList;
+using FiriosServer.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
@@ -21,22 +22,32 @@ namespace Firios.Controllers
         private readonly WebSocketFiriosManager _manager;
         private readonly ILogger<IncidentEntitiesController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly FiriosAuthenticationService _authenticationService;
+        private readonly IncidentId _lastIncident;
 
-        public IncidentEntitiesController(FiriosSuperLightContext context, Repository repository, WebSocketFiriosManager manager, ILogger<IncidentEntitiesController> logger, IConfiguration configuration)
+        public IncidentEntitiesController(FiriosSuperLightContext context,
+            Repository repository,
+            WebSocketFiriosManager manager,
+            ILogger<IncidentEntitiesController> logger,
+            IConfiguration configuration,
+            FiriosAuthenticationService authenticationService,
+            IncidentId lastIncident)
         {
             _context = context;
             _repository = repository;
             _manager = manager;
             _logger = logger;
             _configuration = configuration;
+            _authenticationService = authenticationService;
+            _lastIncident = lastIncident;
         }
 
         // GET: api/IncidentEntities
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<IncidentEntity>>> GetIncidentEntity()
-        {
-            return await _context.IncidentEntity.ToListAsync();
-        }
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<IncidentEntity>>> GetIncidentEntity()
+        //{
+        //    return await _context.IncidentEntity.ToListAsync();
+        //}
 
         // GET: api/IncidentEntities/5
         [HttpGet("{id}")]
@@ -74,6 +85,8 @@ namespace Firios.Controllers
             };
             _context.IncidentEntity.Add(incidentEntity);
             await _context.SaveChangesAsync();
+
+            _lastIncident.Id = incidentEntity.Id;
 
             // Call push service
             var incidentPushData = new ServerPushData
@@ -122,17 +135,36 @@ namespace Firios.Controllers
         [HttpPost("registration")]
         public async Task<StatusCodeResult> Registration(UserToIncidentInputModel data)
         {
-            // TODO return simplier response (potvrzeno a kolik jede?)
             if (ModelState.IsValid && data.State == "yes" || data.State == "no" || data.State == "on_place")
             {
+
+                if (!_authenticationService.ValidateUser(data.Session,
+                        new List<string>()
+                        {
+                            FiriosConstants.HASIC,
+                            FiriosConstants.STROJNIK,
+                            FiriosConstants.VELITEL,
+                            FiriosConstants.VELITEL_JEDNOTKY
+                        }))
+                {
+                    return StatusCode(400);
+                }
+
+                var userBrowser = await _context.UserBrowserDatas.Include(i => i.UserEntity)
+                    .FirstOrDefaultAsync(i => i.Session == data.Session);
+                if (userBrowser == null || userBrowser.UserEntity == null)
+                {
+                    return StatusCode(400);
+                }
                 var incident = await _repository.SaveUserToIncident(data);
                 if (incident == null)
                     return StatusCode(400);
 
+                if (data.IncidentId != _lastIncident.Id)
+                    return Ok();
+
                 // Web sockety
 
-                var userBrowser = await _context.UserBrowserDatas.Include(i => i.UserEntity)
-                    .FirstOrDefaultAsync(i => i.Session == data.Session);
                 var user = userBrowser.UserEntity;
 
                 var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel
@@ -175,12 +207,11 @@ namespace Firios.Controllers
             var buffer = new byte[1024 * 4];
             var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-            // TODO authorization
-
             var userBrowserData = await _context.UserBrowserDatas.FirstOrDefaultAsync(i => i.Session == Encoding.UTF8.GetString(buffer));
             if (userBrowserData == null)
             {
                 await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+                return;
             }
 
             var id = new Guid();
@@ -188,6 +219,32 @@ namespace Firios.Controllers
             var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel { Status = "ok" }).ToJson());
 
             await webSocket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length), result.MessageType, result.EndOfMessage, CancellationToken.None);
+
+            // If last incident have users
+
+            var lastIncident = await _context.IncidentEntity
+                .Include(i => i.Users)
+                .ThenInclude(i => i.UserEntity)
+                .FirstOrDefaultAsync(i => i.Id == _lastIncident.Id);
+
+            if (lastIncident != null)
+            {
+                foreach (var userIncident in lastIncident.Users)
+                {
+                    var user = userIncident.UserEntity;
+                    var webSocketMsg = Encoding.UTF8.GetBytes((new WebSocketModel
+                    {
+                        Id = user.Id.ToString(),
+                        Action = userIncident.State,
+                        Name = user.FirstName,
+                        Surname = user.SecondName,
+                        Position = user.Position
+                    }).ToJson());
+                    await webSocket.SendAsync(new ArraySegment<byte>(webSocketMsg, 0, webSocketMsg.Length),
+                        WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, CancellationToken.None);
+                }
+            }
+
             while (!result.CloseStatus.HasValue)
             {
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);

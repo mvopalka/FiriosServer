@@ -1,6 +1,7 @@
 ﻿#nullable disable
 using Firios.Data;
 using FiriosServer.Data;
+using FiriosServer.Extension;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +21,16 @@ namespace FiriosServer.Controllers
         // GET: Incident
         public async Task<IActionResult> Index()
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.HASIC,
+                        FiriosConstants.STROJNIK,
+                        FiriosConstants.VELITEL,
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
-                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+                return RedirectToAction(nameof(UserController.Login), FiriosExtensions.GetControllerName<UserController>());
             }
             var incidents = await _context.IncidentEntity.ToListAsync();
             incidents.Sort((x, y) => y.Date.CompareTo(x.Date));
@@ -32,9 +40,16 @@ namespace FiriosServer.Controllers
         // GET: Incident/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request, new List<string>() { "Hasič" }))
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.HASIC,
+                        FiriosConstants.STROJNIK,
+                        FiriosConstants.VELITEL,
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
             {
-                return RedirectToRoute(nameof(UserController), nameof(UserController.Login));
+                return RedirectToAction(nameof(UserController.Login), FiriosExtensions.GetControllerName<UserController>());
             }
             if (id == null)
             {
@@ -50,6 +65,8 @@ namespace FiriosServer.Controllers
 
             return View(incidentEntity);
         }
+
+        // TODO VELITEL_JEDNOTKY should be able to disable incident
 
         //// GET: Incident/Create
         //public IActionResult Create()
