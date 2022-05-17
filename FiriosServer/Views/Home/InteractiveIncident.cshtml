@@ -111,14 +111,19 @@
 @section Scripts {
     <script>
         const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
-        var socket = new WebSocket(`wss://${self.location.host}/UserRegistration`);
-        socket.onmessage = message => {
+        var socket;
+
+        var state = 0;
+
+        function socketOnMessage (message) {
             data = JSON.parse(message.data);
             console.log(data);
             if (data["Status"] != undefined && data["Status"] != null) {
                 if (data["Status"] === "ok") {
+                    document.getElementById("state").classList.remove("text-danger");
                     document.getElementById("state").classList.add("text-success");
                 } else {
+                    document.getElementById("state").classList.remove("text-success");
                     document.getElementById("state").classList.add("text-danger");
                 }
 
@@ -130,8 +135,44 @@
                 renderCard(data);
             }
         }
-        socket.onopen = () => socket.send(getSession());
-        socket.onclose = () => console.log("Socket was closed. Myyyyy notify")
+
+        function socketOnOpen() {
+            state = 0;
+            socket.send(getSession());
+        }
+
+        function socketOnClose(e) {
+            if (state === 2) {
+                return;
+            }
+            console.log("Web socket was closed", e.reason);
+            document.getElementById("state").classList.remove("text-success");
+            document.getElementById("state").classList.add("text-danger");
+            state = 1;
+            setTimeout(createWebSocket, 15000);
+        }
+
+        function socketOnError(e) {
+            if (state === 1) {
+                return;
+            }
+            console.error("There was an error in websocket", e.message);
+            document.getElementById("state").classList.remove("text-success");
+            document.getElementById("state").classList.add("text-danger");
+            state = 2;
+            setTimeout(createWebSocket, 15000);
+        }
+
+        function createWebSocket() {
+            socket = new WebSocket(`wss://${self.location.host}/UserRegistration`);
+
+            socket.onmessage = socketOnMessage;
+            socket.onopen = socketOnOpen;
+            socket.onclose = socketOnClose;
+            socket.onerror = socketOnError;
+        }
+
+        createWebSocket();
 
     </script>
 }
