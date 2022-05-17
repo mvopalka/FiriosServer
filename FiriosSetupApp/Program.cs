@@ -8,7 +8,7 @@ using WebPush;
 var vapidKeys = VapidHelper.GenerateVapidKeys();
 
 var ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP521);
-var privateSec1Der = ecdsa.ExportECPrivateKey();
+var privateSec1Der = ecdsa.ExportPkcs8PrivateKey();
 
 var stringWriter = new StringWriter();
 var pemWriter = new PemWriter(stringWriter);
@@ -18,9 +18,12 @@ pemWriter.WriteObject(new PemObject("PRIVATE KEY", privateSec1Der));
 //Console.WriteLine("Private VAPID key: \n{0}", vapidKeys.PrivateKey);
 //Console.WriteLine("Private DSA key:\n{0}", stringWriter);
 
+var hexStringDSA = Convert.ToHexString(ecdsa.ExportECPrivateKey());
+
 var dsa = new DSA
 {
-    PrivateKey = stringWriter.ToString()
+    //PrivateKey = stringWriter.ToString()
+    PrivateKey = hexStringDSA
 };
 var vapid = new VAPID
 {
@@ -36,3 +39,6 @@ var config = new FiriosConfig
 };
 
 Console.WriteLine(JsonSerializer.Serialize(config));
+
+var ecdsa1 = ECDsa.Create(ECCurve.NamedCurves.nistP521);
+//ecdsa1.ImportFromPem(config.DSA.PrivateKey);
