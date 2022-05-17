@@ -12,12 +12,17 @@ namespace FiriosServer.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly FiriosSuperLightContext _context;
         private readonly FiriosAuthenticationService _authenticationService;
+        private readonly FiriosSourceAuthentificationService _sourceAuthentificationService;
 
-        public HomeController(ILogger<HomeController> logger, FiriosSuperLightContext context, FiriosAuthenticationService authenticationService)
+        public HomeController(ILogger<HomeController> logger,
+            FiriosSuperLightContext context,
+            FiriosAuthenticationService authenticationService,
+            FiriosSourceAuthentificationService sourceAuthentificationService)
         {
             _logger = logger;
             _context = context;
             _authenticationService = authenticationService;
+            _sourceAuthentificationService = sourceAuthentificationService;
         }
 
         public IActionResult Index()
@@ -28,6 +33,39 @@ namespace FiriosServer.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+
+        public async Task<IActionResult> Notifiers()
+        {
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
+            {
+                return RedirectToAction(nameof(UserController.Login), FiriosExtensions.GetControllerName<UserController>());
+            }
+
+            var model = _sourceAuthentificationService.GetIds();
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> NotifierAdd(string id)
+        {
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
+            {
+                return RedirectToAction(nameof(UserController.Login), FiriosExtensions.GetControllerName<UserController>());
+            }
+
+            _sourceAuthentificationService.GenerateSignature(id);
+
+            return RedirectToAction(nameof(Notifiers));
         }
 
         public async Task<IActionResult> UserConfirmAction(Guid? id)

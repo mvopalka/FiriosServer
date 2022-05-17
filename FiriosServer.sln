@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiriosServer", "FiriosServer\FiriosServer.csproj", "{DF2EF4CA-A45D-4238-A882-627EF6551ED6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FiriosServer", "FiriosServer\FiriosServer.csproj", "{DF2EF4CA-A45D-4238-A882-627EF6551ED6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FiriosSetupApp", "FiriosSetupApp\FiriosSetupApp.csproj", "{B0CEF634-06B5-42BF-90D5-33002302F359}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DF2EF4CA-A45D-4238-A882-627EF6551ED6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF2EF4CA-A45D-4238-A882-627EF6551ED6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF2EF4CA-A45D-4238-A882-627EF6551ED6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0CEF634-06B5-42BF-90D5-33002302F359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0CEF634-06B5-42BF-90D5-33002302F359}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0CEF634-06B5-42BF-90D5-33002302F359}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0CEF634-06B5-42BF-90D5-33002302F359}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

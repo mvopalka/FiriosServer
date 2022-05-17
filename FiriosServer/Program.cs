@@ -11,6 +11,7 @@ builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSql
 builder.Services.AddTransient<Repository>();
 builder.Services.AddSingleton<WebSocketFiriosManager>();
 builder.Services.AddSingleton<IncidentId>();
+builder.Services.AddSingleton<FiriosSourceAuthentificationService>();
 builder.Services.AddTransient<FiriosAuthenticationService>();
 
 // Add services to the container.

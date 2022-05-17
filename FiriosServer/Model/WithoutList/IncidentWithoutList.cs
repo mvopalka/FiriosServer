@@ -2,6 +2,8 @@
 
 public class IncidentWithoutList
 {
+    public string ValidationId { get; set; } = string.Empty;
+    public string SignatureId { get; set; } = string.Empty;
     public string Mpd { get; set; } = string.Empty;
     public string Region { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;

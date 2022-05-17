@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using WebPush;
 
 namespace Firios.Controllers
@@ -24,6 +25,7 @@ namespace Firios.Controllers
         private readonly IConfiguration _configuration;
         private readonly FiriosAuthenticationService _authenticationService;
         private readonly IncidentId _lastIncident;
+        private readonly FiriosSourceAuthentificationService _sourceAuthentificationService;
 
         public IncidentEntitiesController(FiriosSuperLightContext context,
             Repository repository,
@@ -31,7 +33,8 @@ namespace Firios.Controllers
             ILogger<IncidentEntitiesController> logger,
             IConfiguration configuration,
             FiriosAuthenticationService authenticationService,
-            IncidentId lastIncident)
+            IncidentId lastIncident,
+            FiriosSourceAuthentificationService sourceAuthentificationService)
         {
             _context = context;
             _repository = repository;
@@ -40,6 +43,7 @@ namespace Firios.Controllers
             _configuration = configuration;
             _authenticationService = authenticationService;
             _lastIncident = lastIncident;
+            _sourceAuthentificationService = sourceAuthentificationService;
         }
 
         // GET: api/IncidentEntities
@@ -65,8 +69,24 @@ namespace Firios.Controllers
         // POST: api/IncidentEntities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<IncidentEntity>> IncidentRegistration(IncidentWithoutList incident)
+        public async Task<ActionResult> IncidentRegistration(IncidentWithoutList incident)
         {
+            string validation = "";
+            var regex = @"^([0-9A-Fa-f]{2})+$";
+            var match = Regex.Match(incident.ValidationId, regex, RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                return Ok(new { Status = "bad" });
+            }
+            if (!_sourceAuthentificationService.Validate(incident.ValidationId, incident.SignatureId))
+            {
+                validation = _sourceAuthentificationService.GetValidationString(incident.ValidationId);
+                if (validation == "")
+                {
+                    return Ok(new { Status = "bad" });
+                }
+            }
+
             var incidentEntity = new IncidentEntity
             {
                 Id = new Guid(),
@@ -130,7 +150,7 @@ namespace Firios.Controllers
                     WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, CancellationToken.None);
             }
 
-            return incidentEntity;
+            return Ok(new { incidentEntity, Status = "ok", Sig = validation });
         }
         [HttpPost("registration")]
         public async Task<StatusCodeResult> Registration(UserToIncidentInputModel data)
@@ -295,6 +315,24 @@ namespace Firios.Controllers
                 return Ok();
             }
             return BadRequest();
+        }
+        [HttpPost("NotifierRegistration")]
+        public string NotifierRegistration(NotifierModel model)
+        {
+            var regex = @"^([0-9A-Fa-f]{2})+$";
+            var match = Regex.Match(model.ValidationId, regex, RegexOptions.IgnoreCase);
+            if (!match.Success)
+            {
+                return "bad";
+            }
+            if (_sourceAuthentificationService.Validate(model.ValidationId, model.SignatureId))
+            {
+                return "ok";
+            }
+
+            var validation = _sourceAuthentificationService.GetValidationString(model.ValidationId);
+
+            return validation == "" ? "bad" : validation;
         }
     }
 }

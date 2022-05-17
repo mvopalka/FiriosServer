@@ -1,4 +1,5 @@
 ﻿using Firios.Data;
+using FiriosServer.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace FiriosServer;
@@ -24,6 +25,10 @@ public class AuthMiddleware
             {
                 context.Items.Add("user", userBrowserData.UserEntity.Email);
                 context.Items.Add("PWA_ServerKey", configuration["Vapid:publicKey"]);
+                if (userBrowserData.UserEntity.Position == FiriosConstants.VELITEL_JEDNOTKY)
+                {
+                    context.Items.Add("admin", true);
+                }
             }
         }
 

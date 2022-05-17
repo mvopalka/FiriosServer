@@ -40,6 +40,12 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
+                    @if (Context.Items.ContainsKey("admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Notifiers">Notifiers</a>
+                        </li>
+                    }
                 </ul>
                 @if (Context.Items.ContainsKey("user"))
                 {
