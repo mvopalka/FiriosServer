@@ -276,7 +276,7 @@ namespace Firios.Controllers
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
         [HttpPost("PushRegistration")]
-        public async Task<IActionResult> PushNotificationRegistration(UserPushData userPushData) //Todo to model and implement
+        public async Task<IActionResult> PushNotificationRegistration(UserPushData userPushData)
         {
             if (ModelState.IsValid)
             {

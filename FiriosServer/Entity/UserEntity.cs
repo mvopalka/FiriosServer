@@ -7,7 +7,6 @@ namespace Firios.Entity;
 [Index(nameof(Email), IsUnique = true)]
 public class UserEntity : EntityBase<Guid>
 {
-    // TODO: Add atributes for password sald and interation count
     [DisplayName("Tituly")]
     public string Titules { get; set; } = string.Empty;
     [DisplayName("Jméno")]
