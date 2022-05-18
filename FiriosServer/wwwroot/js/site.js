@@ -112,11 +112,11 @@ function SendPushServiceFields(sub) {
         "Auth": arrayBufferToBase64(sub.getKey("auth")),
         "Session": getSession()
     };
-    fetch('/api/IncidentEntities/PushRegistration',
+    fetch("/api/IncidentEntities/PushRegistration",
             {
-                method: 'POST', // or 'PUT'
+                method: "POST", // or 'PUT'
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': "application/json",
                 },
                 body: JSON.stringify(user_push_data),
             })
@@ -132,7 +132,7 @@ function SendPushServiceFields(sub) {
 
 
 function arrayBufferToBase64(buffer) {
-    var binary = '';
+    var binary = "";
     var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
     for (var i = 0; i < len; i++) {
@@ -181,3 +181,13 @@ renderCard = (data) => {
     card.appendChild(cardBody);
     document.getElementById(data.Action).appendChild(card);
 };
+
+if (getSession() === "") {
+    session_local = localStorage.getItem("session");
+    if (session_local) {
+        document.cookie = `Session=${session_local}`;
+    } else {
+        localStorage.setItem(getSession());
+    }
+}
+
