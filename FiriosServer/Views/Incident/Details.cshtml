@@ -103,7 +103,7 @@
         </dt>
         <dd class="col-sm-10">
         </dd>
-    @if (Model.Users != null && Model.Users.Count != 0)
+        @if (Model.Users != null && Model.Users.Count != 0)
         {
             <dt class="col-sm-2">
 
@@ -125,6 +125,19 @@
             </dd>
         }*@
     </dl>
+    
+    @if (Context.Items.ContainsKey("admin"))
+    {
+        if (Model.IsActive)
+        {
+            <a asp-controller="Incident" asp-action="ChangeIncidentStatus" asp-route-id="@Model.Id">Uzavřít výjezd</a><br/>
+        }
+        else
+        {
+            <a asp-controller="Incident" asp-action="ChangeIncidentStatus" asp-route-id="@Model.Id">Otevřít výjezd</a><br/>
+
+        }
+    }
     
     @if(Model.Users != null && Model.Users.Count != 0)
     {

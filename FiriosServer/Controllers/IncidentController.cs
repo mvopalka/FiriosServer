@@ -71,6 +71,29 @@ namespace FiriosServer.Controllers
             return View(incidentEntity);
         }
 
+        public async Task<IActionResult> ChangeIncidentStatus(Guid id)
+        {
+            if (!_authenticationService.ValidateUser(Request,
+                    new List<string>()
+                    {
+                        FiriosConstants.VELITEL_JEDNOTKY
+                    }))
+            {
+                return RedirectToAction(nameof(UserController.Login), FiriosExtensions.GetControllerName<UserController>());
+            }
+            var incident = await _context.IncidentEntity.FirstOrDefaultAsync(i => i.Id == id);
+            if (incident == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            incident.IsActive = !incident.IsActive;
+            _context.Update(incident);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Details), new { id = id });
+
+        }
+
         // TODO VELITEL_JEDNOTKY should be able to disable incident
 
         //// GET: Incident/Create
