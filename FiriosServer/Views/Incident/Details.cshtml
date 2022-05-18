@@ -13,7 +13,7 @@
         @if (!string.IsNullOrEmpty(Model.Mpd))
         {
             <dt class="col-sm-2">
-             @Html.DisplayNameFor(model => model.Mpd)
+                @Html.DisplayNameFor(model => model.Mpd)
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.Mpd)
@@ -99,7 +99,93 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Date)
         </dd>
+        <dt class="col-sm-2">
+        </dt>
+        <dd class="col-sm-10">
+        </dd>
+    @if (Model.Users != null && Model.Users.Count != 0)
+        {
+            <dt class="col-sm-2">
+
+                <span> @Html.DisplayNameFor(model => model.Users):</span>
+            </dt>
+            <dd class="col-sm-10">
+            </dd>
+        }
+
+        @* @foreach (var item in Model.Incidents)
+        {
+            <dd class="col-sm-1">
+            </dd>
+            <dd class="col-sm-2">
+                @Html.DisplayFor(modelItem => item.IncidentEntity.Type)
+            </dd>
+            <dd class="col-sm-9">
+                <a asp-action="Details" asp-controller="Incident" asp-route-id="@item.IncidentEntity.Id">@Html.DisplayFor(modelItem => item.IncidentEntity.Date)</a>
+            </dd>
+        }*@
     </dl>
+    
+    @if(Model.Users != null && Model.Users.Count != 0)
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="table-2-hide">
+                    @Html.DisplayNameFor(model => model.Users[0].UserEntity.Titules)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Users[0].UserEntity.FirstName)
+                </th>
+                <th class="table-2-hide">
+                    @Html.DisplayNameFor(model => model.Users[0].UserEntity.MiddleName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Users[0].UserEntity.SecondName)
+                </th>
+                <th class="table-2-hide">
+                    @Html.DisplayNameFor(model => model.Users[0].UserEntity.Email)
+                </th>
+                <th class="table-2-hide">
+                    @Html.DisplayNameFor(model => model.Users[0].UserEntity.Position)
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Users) {
+                @if (item.State == "yes" || item.State == "on_place")
+                {
+                    <tr>
+                        <td class="table-2-hide">
+                            @Html.DisplayFor(modelItem => item.UserEntity.Titules)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserEntity.FirstName)
+                        </td>
+                        <td class="table-2-hide">
+                            @Html.DisplayFor(modelItem => item.UserEntity.MiddleName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserEntity.SecondName)
+                        </td>
+                        <td class="table-2-hide">
+                            @Html.DisplayFor(modelItem => item.UserEntity.Email)
+                        </td>
+                        <td class="table-2-hide">
+                            @Html.DisplayFor(modelItem => item.UserEntity.Position)
+                        </td>
+                        <td>
+                            @*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+    *@                <a asp-action="Details" asp-controller="User" asp-route-id="@item.UserEntity.Id">Detail</a> @*|*@
+                            @*                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+    *@            </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    }
 </div>
 <div>
     @*<a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@

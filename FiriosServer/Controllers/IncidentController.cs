@@ -57,11 +57,16 @@ namespace FiriosServer.Controllers
             }
 
             var incidentEntity = await _context.IncidentEntity
+                .Include(i => i.Users)
+                .ThenInclude(i => i.UserEntity)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (incidentEntity == null)
             {
                 return NotFound();
             }
+
+            incidentEntity.Users.Sort((x, y) =>
+                string.Compare(y.UserEntity.FirstName, x.UserEntity.FirstName, StringComparison.Ordinal));
 
             return View(incidentEntity);
         }
