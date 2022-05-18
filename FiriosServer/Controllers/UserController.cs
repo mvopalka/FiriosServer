@@ -179,7 +179,7 @@ namespace FiriosServer.Controllers
             {
                 if (await _context.UserEntity.FirstOrDefaultAsync(i => i.Email == userRegistrationModel.Email) != null)
                 {
-                    ViewBag.Error = "Email already exist";
+                    ViewBag.Error = "Email už existuje";
                     return View(userRegistrationModel);
                 }
                 var userEntity = userRegistrationModel.ToUserEntity();
@@ -400,11 +400,20 @@ namespace FiriosServer.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            if (!ModelState.IsValid || !changePasswordModel.IsValidPassword(user)) return View();
-            user = changePasswordModel.ToUserEntity(user);
-            _context.Update(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid && changePasswordModel.IsValidPassword(user))
+            {
+                user = changePasswordModel.ToUserEntity(user);
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!changePasswordModel.IsValidPassword(user))
+            {
+
+            }
+            ViewBag.Error = "Špatné staré heslo";
+            return View();
 
         }
     }
