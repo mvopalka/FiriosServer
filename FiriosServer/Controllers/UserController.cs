@@ -375,5 +375,37 @@ namespace FiriosServer.Controllers
 
         //    return false;
         //}
+
+        public async Task<IActionResult> ChangeUserPassword()
+        {
+            var user = _authenticationService.GetUserFromRequest(Request);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            return View();
+        }
+
+        // POST: User/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUserPassword([Bind("PasswordOld,Password,ConfirmPassword")] UserChangePasswordModel changePasswordModel)
+        {
+            var user = _authenticationService.GetUserFromRequest(Request);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            if (!ModelState.IsValid || !changePasswordModel.IsValidPassword(user)) return View();
+            user = changePasswordModel.ToUserEntity(user);
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
+        }
     }
 }

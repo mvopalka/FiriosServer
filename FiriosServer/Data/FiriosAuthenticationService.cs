@@ -69,4 +69,19 @@ public class FiriosAuthenticationService
 
         return false;
     }
+    public UserEntity? GetUserFromRequest(HttpRequest httpRequest)
+    {
+        var session = httpRequest.Cookies[FiriosConstants.SESSION_NAME];
+        if (string.IsNullOrEmpty(session))
+        {
+            return null;
+        }
+        var userEntity = GetUserFromSession(session);
+        if (userEntity == null)
+        {
+            return null;
+        }
+
+        return userEntity;
+    }
 }
