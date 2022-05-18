@@ -6,9 +6,12 @@
 
 <h1>Uživatelé</h1>
 
-<p>
-    <a asp-action="Create">Vytvořit nového uživatele</a>
-</p>
+@if (Context.Items.ContainsKey("admin"))
+{
+    <p>
+        <a asp-action="Create">Vytvořit nového uživatele</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -55,9 +58,15 @@
                 @Html.DisplayFor(modelItem => item.Position)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editovat</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detail</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
+            @if (Context.Items.ContainsKey("admin"))
+            {
+                <a asp-action="Edit" asp-route-id="@item.Id">Editovat</a> <span>|</span>
+            }
+            <a asp-action="Details" asp-route-id="@item.Id">Detail</a>
+            @if (Context.Items.ContainsKey("admin"))
+            {
+            <span>|</span><a asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
+            }
             </td>
         </tr>
 }
