@@ -188,6 +188,7 @@ if (getSession() === "") {
     session_local = localStorage.getItem(session_name);
     if (session_local) {
         document.cookie = `${session_name}=${session_local}`;
+        location.reload();
     } else {
         localStorage.setItem(session_name, getSession());
     }
