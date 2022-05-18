@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<Firios.Entity.UserEntity>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Uživatelé";
 }
 
-<h1>Index</h1>
+<h1>Uživatelé</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Vytvořit nového uživatele</a>
 </p>
 <table class="table">
     <thead>
@@ -55,9 +55,9 @@
                 @Html.DisplayFor(modelItem => item.Position)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editovat</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Detail</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
             </td>
         </tr>
 }

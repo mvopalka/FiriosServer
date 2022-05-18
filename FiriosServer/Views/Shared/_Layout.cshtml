@@ -26,43 +26,43 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Domů</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Uživatelé</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Incident" asp-action="Index">Incidents</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Incident" asp-action="Index">Výjezdy</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="InteractiveIncident">Monitor</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
                     @if (Context.Items.ContainsKey("admin"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Notifiers">Notifiers</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Notifiers">Oznamovače</a>
                         </li>
                     }
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
                 </ul>
                 @if (Context.Items.ContainsKey("user"))
                 {
                     <span style="display: none" id="PWA_ServerKey">@Context.Items["PWA_ServerKey"]</span>
-                    <button type="button" id="notificationTopMenu" class="btn btn-outline-primary" style="margin-right: 5px">Notifications</button>
+                    <button type="button" id="notificationTopMenu" class="btn btn-outline-primary" style="margin-right: 5px">Notifikace</button>
 
                     <form asp-controller="User" asp-action="Logout" class="form-inline my-2 my-lg-0">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label class="mr-sm-2">@Context.Items["user"]</label>
-                            <input type="submit" value="Logout" class="btn btn-primary my-2 my-sm-0"/>
+                            <input type="submit" value="Odhlášení" class="btn btn-primary my-2 my-sm-0"/>
                         </div>
                     </form>
                 }
                 else
                 {
-                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Přihlášení</a>
                 }
             </div>
         </div>
