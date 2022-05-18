@@ -12,7 +12,7 @@ public class UserLoginModel
     [EmailAddress(ErrorMessage = "Invalid Email Address.")]
     [DataType(DataType.EmailAddress)]
     public string Email { get; set; }
-
+    [Display(Name = "Heslo")]
     [Required]
     [DataType(DataType.Password)]
     public string Password { get; set; }

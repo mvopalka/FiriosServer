@@ -30,6 +30,6 @@ public class IncidentEntity : EntityBase<Guid>
     [DisplayName("Datum")]
 
     public DateTime Date { get; set; }
-
-    public ICollection<UserIncidentEntity> Users { get; set; } = new List<UserIncidentEntity>();
+    [DisplayName("Uživatelé")]
+    public List<UserIncidentEntity> Users { get; set; } = new List<UserIncidentEntity>();
 }
