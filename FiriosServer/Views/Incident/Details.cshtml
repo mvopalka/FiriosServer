@@ -10,54 +10,83 @@
     <h4>Výjezdu</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Mpd)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Mpd)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Region)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Region)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SubType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SubType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ObjectName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ObjectName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AdditionalInformation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AdditionalInformation)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Level)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Level)
-        </dd>
+        @if (!string.IsNullOrEmpty(Model.Mpd))
+        {
+            <dt class="col-sm-2">
+             @Html.DisplayNameFor(model => model.Mpd)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Mpd)
+            </dd>
+
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.Region))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Region)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Region)
+            </dd>
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.Address))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.SubType))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SubType)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SubType)
+            </dd>
+        }
+        
+        @if (!string.IsNullOrEmpty(Model.Type))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Type)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Type)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.ObjectName))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ObjectName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ObjectName)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.AdditionalInformation))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.AdditionalInformation)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.AdditionalInformation)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Level) && Model.Level != " ")
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Level)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Level)
+            </dd>
+        }
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsActive)
         </dt>

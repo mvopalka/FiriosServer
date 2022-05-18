@@ -10,57 +10,75 @@
     <h4>Uživatele</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Titules)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Titules)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MiddleName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SecondName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SecondName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Position)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Position)
-        </dd>
-        <dt class = "col-sm-2">
+        @if (!string.IsNullOrEmpty(Model.Titules))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Titules)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Titules)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.FirstName))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.MiddleName))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.MiddleName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.MiddleName)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.SecondName))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.SecondName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.SecondName)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Email))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+        }
+        @if (!string.IsNullOrEmpty(Model.Position))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Position)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Position)
+            </dd>
+        }
+        <dt class="col-sm-2">
         </dt>
         <dd class="col-sm-10">
         </dd>
         @if (Model.Incidents != null && Model.Incidents.Count != 0)
         {
-            <dt class = "col-sm-2">
-            
+            <dt class="col-sm-2">
+
                 <span> @Html.DisplayNameFor(model => model.Incidents):</span>
             </dt>
-            <dd class = "col-sm-10">
+            <dd class="col-sm-10">
             </dd>
         }
 
-       @* @foreach (var item in Model.Incidents)
+        @* @foreach (var item in Model.Incidents)
         {
             <dd class="col-sm-1">
             </dd>
