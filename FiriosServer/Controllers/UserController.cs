@@ -5,6 +5,7 @@ using FiriosServer.Data;
 using FiriosServer.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace FiriosServer.Controllers
 {
@@ -13,6 +14,7 @@ namespace FiriosServer.Controllers
         // TODO: Check all password inputs for safe password
         private readonly FiriosSuperLightContext _context;
         private readonly FiriosAuthenticationService _authenticationService;
+        private string passwordRegex = @"(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$";
 
         public UserController(FiriosSuperLightContext context, FiriosAuthenticationService authenticationService)
         {
@@ -182,6 +184,12 @@ namespace FiriosServer.Controllers
                     ViewBag.Error = "Email už existuje";
                     return View(userRegistrationModel);
                 }
+                var match = Regex.Match(userRegistrationModel.Password, passwordRegex);
+                if (!match.Success)
+                {
+                    ViewBag.Error = "Heslo nemá dostatečnou komplexitu (aA1?), nebo délku (8)";
+                    return View(userRegistrationModel);
+                }
                 var userEntity = userRegistrationModel.ToUserEntity();
                 _context.Add(userEntity);
                 await _context.SaveChangesAsync();
@@ -241,6 +249,24 @@ namespace FiriosServer.Controllers
                  userEditModel.Position == FiriosConstants.STROJNIK ||
                  userEditModel.Position == FiriosConstants.VELITEL))
             {
+                if (!string.IsNullOrEmpty(userEditModel.Email))
+                {
+                    var userWithSameEmail = await _context.UserEntity.FirstOrDefaultAsync(i => i.Email == userEditModel.Email);
+                    if (userWithSameEmail != null && userWithSameEmail.Email != userEntity.Email)
+                    {
+                        ViewBag.Error = "Email už existuje";
+                        return View(userEditModel);
+                    }
+                }
+                if (!string.IsNullOrEmpty(userEditModel.Password))
+                {
+                    var match = Regex.Match(userEditModel.Password, passwordRegex);
+                    if (!match.Success)
+                    {
+                        ViewBag.Error = "Heslo nemá dostatečnou komplexitu (aA1?), nebo délku (8)";
+                        return View(userEditModel);
+                    }
+                }
                 if (userEntity.Position == FiriosConstants.VELITEL_JEDNOTKY &&
                     !String.IsNullOrEmpty(userEditModel.Position) &&
                     userEditModel.Position != FiriosConstants.VELITEL_JEDNOTKY)
@@ -400,6 +426,27 @@ namespace FiriosServer.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
+            if (!changePasswordModel.IsValidPassword(user))
+            {
+                ViewBag.Error = "Špatné staré heslo";
+                return View();
+            }
+
+            if (!string.IsNullOrEmpty(changePasswordModel.Password))
+            {
+                var match = Regex.Match(changePasswordModel.Password, passwordRegex);
+                if (!match.Success)
+                {
+                    ViewBag.Error = "Heslo nemá dostatečnou komplexitu (aA1?), nebo délku (8)";
+                    return View();
+                }
+            }
+            else
+            {
+                ViewBag.Error = "Nezadáno žádné nové heslo";
+                return View();
+            }
+
             if (ModelState.IsValid && changePasswordModel.IsValidPassword(user))
             {
                 user = changePasswordModel.ToUserEntity(user);
@@ -408,11 +455,6 @@ namespace FiriosServer.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            if (!changePasswordModel.IsValidPassword(user))
-            {
-
-            }
-            ViewBag.Error = "Špatné staré heslo";
             return View();
 
         }
