@@ -30,6 +30,6 @@ public class UserEntity : EntityBase<Guid>
 
     [Required] public string Position { get; set; } = string.Empty;
     public List<UserBrowserData> BrowserData { get; set; }
-
+    [DisplayName("Výjezdy")]
     public virtual List<UserIncidentEntity> Incidents { get; set; }
 }
