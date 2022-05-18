@@ -182,12 +182,16 @@ renderCard = (data) => {
     document.getElementById(data.Action).appendChild(card);
 };
 
+const session_name = "Session";
+
 if (getSession() === "") {
-    session_local = localStorage.getItem("session");
+    session_local = localStorage.getItem(session_name);
     if (session_local) {
-        document.cookie = `Session=${session_local}`;
+        document.cookie = `${session_name}=${session_local}`;
     } else {
-        localStorage.setItem(getSession());
+        localStorage.setItem(session_name, getSession());
     }
+} else {
+    localStorage.setItem(session_name, getSession());
 }
 
