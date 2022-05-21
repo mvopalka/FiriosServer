@@ -6,6 +6,9 @@ namespace FiriosServer;
 
 public class AuthMiddleware
 {
+    private const string user_string = "user";
+    private const string pwa_serverkey_string = "PWA_ServerKey";
+    private const string admin_string = "admin";
     private const string SESSION_NAME = "Session";
     private readonly RequestDelegate _next;
 
@@ -23,11 +26,21 @@ public class AuthMiddleware
                 .FirstOrDefault(browserData => browserData.Session == session);
             if (userBrowserData != null)
             {
-                context.Items.Add("user", userBrowserData.UserEntity.Email);
-                context.Items.Add("PWA_ServerKey", configuration["Vapid:publicKey"]);
+                if (!context.Items.ContainsKey(user_string))
+                {
+                    context.Items.Add(user_string, userBrowserData.UserEntity.Email);
+                }
+
+                if (!context.Items.ContainsKey(pwa_serverkey_string))
+                {
+                    context.Items.Add(pwa_serverkey_string, configuration["Vapid:publicKey"]);
+                }
                 if (userBrowserData.UserEntity.Position == FiriosConstants.VELITEL_JEDNOTKY)
                 {
-                    context.Items.Add("admin", true);
+                    if (!context.Items.ContainsKey(admin_string))
+                    {
+                        context.Items.Add(admin_string, true);
+                    }
                 }
             }
         }
