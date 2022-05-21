@@ -2,6 +2,11 @@
     ViewData["Title"] = "Home Page";
 }
 
+@if (Context.Items.ContainsKey("error") && Context.Items["error"]?.ToString() != null && Context.Items["error"] == "404")
+{
+    <div class="alert-danger">Požadovaná stránka nebyla nalezena</div>
+}
+
 <style>
     .vut, .fekt {
         font-weight: bolder;
