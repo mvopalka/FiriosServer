@@ -35,6 +35,10 @@ namespace FiriosServer.Controllers
             return View();
         }
 
+        public IActionResult Offline()
+        {
+            return View();
+        }
 
         public async Task<IActionResult> Notifiers()
         {

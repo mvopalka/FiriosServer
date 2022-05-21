@@ -1,4 +1,60 @@
-﻿self.addEventListener('fetch', function (event) { });
+﻿const filesToCache = [
+    '/',
+    'lib/bootstrap/dist/css/bootstrap.min.css',
+    '/lib/jquery/dist/jquery.min.js',
+    //'/index.html',
+    '/lib/bootstrap/dist/js/bootstrap.bundle.min.js',
+    '/favicon.ico',
+    '/Home/Privacy',
+    '/Home/InteractiveIncident',
+    '/Home/Offline',
+    '/js/site.js',
+    '/css/site.css'
+];
+
+const staticCacheName = 'pages-cache-v1';
+
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(staticCacheName)
+        .then(cache => {
+            return cache.addAll(filesToCache);
+        })
+    );
+});
+
+self.addEventListener('fetch', function(event) {
+    console.log('Fetch event for ', event.request.url);
+    event.respondWith(
+        caches.match(event.request)
+        .then(response => {
+            if (response) {
+                return response;
+            }
+            return fetch(event.request);
+        }).catch(error => {
+            return caches.match("/Home/Offline");
+        })
+    );
+});
+
+self.addEventListener('activate', event => {
+
+    const cacheAllowlist = [staticCacheName];
+
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (cacheAllowlist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+});
+
 self.addEventListener('push', function (e) {
     var data;
     if (e.data) {
