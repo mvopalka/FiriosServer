@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Firios.Entity.Base;
+using FiriosServer.Entity.Base;
 
-namespace Firios.Entity;
+namespace FiriosServer.Entity;
 
 public class UserIncidentEntity : EntityBase<Guid>
 {

@@ -1,47 +1,47 @@
-﻿using Firios.Data;
-using Firios.Entity;
-using Firios.Mapper;
-using Firios.Model;
-using Firios.Model.WithoutList;
+﻿using System.Net.WebSockets;
+using System.Text;
+using System.Text.RegularExpressions;
 using FiriosServer.Data;
+using FiriosServer.Entity;
+using FiriosServer.Models;
+using FiriosServer.Models.WebSocketsModels;
+using FiriosServer.Models.WithoutList;
+using FiriosServer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
-using System.Net.WebSockets;
-using System.Text;
-using System.Text.RegularExpressions;
 using WebPush;
 
-namespace Firios.Controllers
+namespace FiriosServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class IncidentEntitiesController : ControllerBase
     {
         private readonly FiriosSuperLightContext _context;
-        private readonly Repository _repository;
-        private readonly WebSocketFiriosManager _manager;
+        private readonly UserHelperService _userHelperService;
+        private readonly WebSocketFiriosManagerService _managerService;
         private readonly ILogger<IncidentEntitiesController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly FiriosAuthenticationService _authenticationService;
-        private readonly IncidentId _lastIncident;
+        private readonly FiriosUserAuthenticationService _userAuthenticationService;
+        private readonly IncidentIdService _lastIncident;
         private readonly FiriosSourceAuthentificationService _sourceAuthentificationService;
 
         public IncidentEntitiesController(FiriosSuperLightContext context,
-            Repository repository,
-            WebSocketFiriosManager manager,
+            UserHelperService userHelperService,
+            WebSocketFiriosManagerService managerService,
             ILogger<IncidentEntitiesController> logger,
             IConfiguration configuration,
-            FiriosAuthenticationService authenticationService,
-            IncidentId lastIncident,
+            FiriosUserAuthenticationService userAuthenticationService,
+            IncidentIdService lastIncident,
             FiriosSourceAuthentificationService sourceAuthentificationService)
         {
             _context = context;
-            _repository = repository;
-            _manager = manager;
+            _userHelperService = userHelperService;
+            _managerService = managerService;
             _logger = logger;
             _configuration = configuration;
-            _authenticationService = authenticationService;
+            _userAuthenticationService = userAuthenticationService;
             _lastIncident = lastIncident;
             _sourceAuthentificationService = sourceAuthentificationService;
         }
@@ -57,7 +57,7 @@ namespace Firios.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IncidentModel>> GetIncidentEntity(Guid id)
         {
-            var incidentModel = await _repository.GetIncidentModelById(id);
+            var incidentModel = await _userHelperService.GetIncidentModelById(id);
 
             if (incidentModel == null)
             {
@@ -144,7 +144,7 @@ namespace Firios.Controllers
             // Call websockets
 
             var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel { IncidentWithoutList = incident }).ToJson());
-            foreach (var webSocket in _manager.GetAll())
+            foreach (var webSocket in _managerService.GetAll())
             {
                 await webSocket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length),
                     WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, CancellationToken.None);
@@ -158,7 +158,7 @@ namespace Firios.Controllers
             if (ModelState.IsValid && data.State == "yes" || data.State == "no" || data.State == "on_place")
             {
 
-                if (!_authenticationService.ValidateUser(data.Session,
+                if (!_userAuthenticationService.ValidateUser(data.Session,
                         new List<string>()
                         {
                             FiriosConstants.HASIC,
@@ -176,7 +176,7 @@ namespace Firios.Controllers
                 {
                     return StatusCode(400);
                 }
-                var incident = await _repository.SaveUserToIncident(data);
+                var incident = await _userHelperService.SaveUserToIncident(data);
                 if (incident == null)
                     return StatusCode(400);
 
@@ -196,7 +196,7 @@ namespace Firios.Controllers
                     Position = user.Position
                 }).ToJson());
 
-                foreach (var webSocket in _manager.GetAll())
+                foreach (var webSocket in _managerService.GetAll())
                 {
                     await webSocket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length),
                         WebSocketMessageType.Text, WebSocketMessageFlags.EndOfMessage, CancellationToken.None);
@@ -235,7 +235,7 @@ namespace Firios.Controllers
             }
 
             var id = new Guid();
-            _manager.AddNew(id, webSocket);
+            _managerService.AddNew(id, webSocket);
             var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel { Status = "ok" }).ToJson());
 
             await webSocket.SendAsync(new ArraySegment<byte>(serverMsg, 0, serverMsg.Length), result.MessageType, result.EndOfMessage, CancellationToken.None);
@@ -272,7 +272,7 @@ namespace Firios.Controllers
 
             }
 
-            _manager.RemoveById(id);
+            _managerService.RemoveById(id);
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
         [HttpPost("PushRegistration")]

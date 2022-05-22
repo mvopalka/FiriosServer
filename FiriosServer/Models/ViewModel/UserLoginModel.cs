@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Firios.Model;
+namespace FiriosServer.Models.ViewModel;
 
 public class UserLoginModel
 {

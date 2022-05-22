@@ -1,8 +1,7 @@
-﻿using Firios.Data;
-using FiriosServer.Data;
+﻿using FiriosServer.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace FiriosServer;
+namespace FiriosServer.Middleware;
 
 public class AuthMiddleware
 {

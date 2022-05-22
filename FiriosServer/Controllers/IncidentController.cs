@@ -1,7 +1,7 @@
 ﻿#nullable disable
-using Firios.Data;
 using FiriosServer.Data;
 using FiriosServer.Extension;
+using FiriosServer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,18 +10,18 @@ namespace FiriosServer.Controllers
     public class IncidentController : Controller
     {
         private readonly FiriosSuperLightContext _context;
-        private readonly FiriosAuthenticationService _authenticationService;
+        private readonly FiriosUserAuthenticationService _userAuthenticationService;
 
-        public IncidentController(FiriosSuperLightContext context, FiriosAuthenticationService authenticationService)
+        public IncidentController(FiriosSuperLightContext context, FiriosUserAuthenticationService userAuthenticationService)
         {
             _context = context;
-            _authenticationService = authenticationService;
+            _userAuthenticationService = userAuthenticationService;
         }
 
         // GET: Incident
         public async Task<IActionResult> Index()
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.HASIC,
@@ -40,7 +40,7 @@ namespace FiriosServer.Controllers
         // GET: Incident/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.HASIC,
@@ -73,7 +73,7 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> ChangeIncidentStatus(Guid id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY

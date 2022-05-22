@@ -1,14 +1,14 @@
-﻿using Firios.Data;
-using Firios.Entity;
+﻿using FiriosServer.Data;
+using FiriosServer.Entity;
 using Microsoft.EntityFrameworkCore;
 
-namespace FiriosServer.Data;
+namespace FiriosServer.Services;
 
-public class FiriosAuthenticationService
+public class FiriosUserAuthenticationService
 {
     private FiriosSuperLightContext _context;
 
-    public FiriosAuthenticationService(FiriosSuperLightContext context)
+    public FiriosUserAuthenticationService(FiriosSuperLightContext context)
     {
         _context = context;
     }

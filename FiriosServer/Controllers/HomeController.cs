@@ -1,9 +1,9 @@
-﻿using Firios.Data;
-using FiriosServer.Data;
+﻿using FiriosServer.Data;
 using FiriosServer.Extension;
 using FiriosServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using FiriosServer.Services;
 
 namespace FiriosServer.Controllers
 {
@@ -11,17 +11,17 @@ namespace FiriosServer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly FiriosSuperLightContext _context;
-        private readonly FiriosAuthenticationService _authenticationService;
+        private readonly FiriosUserAuthenticationService _userAuthenticationService;
         private readonly FiriosSourceAuthentificationService _sourceAuthentificationService;
 
         public HomeController(ILogger<HomeController> logger,
             FiriosSuperLightContext context,
-            FiriosAuthenticationService authenticationService,
+            FiriosUserAuthenticationService userAuthenticationService,
             FiriosSourceAuthentificationService sourceAuthentificationService)
         {
             _logger = logger;
             _context = context;
-            _authenticationService = authenticationService;
+            _userAuthenticationService = userAuthenticationService;
             _sourceAuthentificationService = sourceAuthentificationService;
         }
 
@@ -38,7 +38,7 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> Notifiers()
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -54,7 +54,7 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> NotifierAdd(string id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -70,7 +70,7 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> UserConfirmAction(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.HASIC,
@@ -110,7 +110,7 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> InteractiveIncident(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.HASIC,

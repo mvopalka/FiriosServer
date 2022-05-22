@@ -1,7 +1,7 @@
-﻿using Firios.Entity.Base;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using FiriosServer.Entity.Base;
 
-namespace Firios.Entity;
+namespace FiriosServer.Entity;
 
 public class IncidentEntity : EntityBase<Guid>
 {

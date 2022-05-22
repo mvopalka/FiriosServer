@@ -1,4 +1,4 @@
-﻿namespace Firios.Model.Base;
+﻿namespace FiriosServer.Models.Base;
 
 public interface IModel<Tid>
 {

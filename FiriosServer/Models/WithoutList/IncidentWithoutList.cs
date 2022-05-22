@@ -1,4 +1,4 @@
-﻿namespace Firios.Model.WithoutList;
+﻿namespace FiriosServer.Models.WithoutList;
 
 public class IncidentWithoutList
 {

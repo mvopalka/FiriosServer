@@ -1,7 +1,7 @@
-﻿using Firios.Entity;
+﻿using FiriosServer.Entity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Firios.Data
+namespace FiriosServer.Data
 {
     public class FiriosSuperLightContext : DbContext
     {

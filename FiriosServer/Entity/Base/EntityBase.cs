@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Firios.Entity.Base;
+namespace FiriosServer.Entity.Base;
 
 public abstract class EntityBase<T> : IEntity<T>
 {

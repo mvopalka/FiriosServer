@@ -1,4 +1,4 @@
-﻿namespace Firios.Entity.Base;
+﻿namespace FiriosServer.Entity.Base;
 
 public interface IEntity<T>
 {

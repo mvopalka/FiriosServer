@@ -1,6 +1,6 @@
-﻿using Firios.Model.Base;
+﻿using FiriosServer.Models.Base;
 
-namespace Firios.Model;
+namespace FiriosServer.Models;
 
 public class IncidentModel : ModelBase
 {

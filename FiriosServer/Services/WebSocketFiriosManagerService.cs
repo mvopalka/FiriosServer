@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.WebSockets;
 
-namespace Firios.Data;
+namespace FiriosServer.Services;
 
-public class WebSocketFiriosManager
+public class WebSocketFiriosManagerService
 {
     private ConcurrentDictionary<Guid, WebSocket> _subscriptions = new ConcurrentDictionary<Guid, WebSocket>();
 

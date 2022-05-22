@@ -1,15 +1,15 @@
-﻿using Firios.Data;
-using Firios.Entity;
-using Firios.Model;
+﻿using FiriosServer.Data;
+using FiriosServer.Entity;
+using FiriosServer.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Firios.Mapper;
+namespace FiriosServer.Services;
 
-public class Repository
+public class UserHelperService
 {
     private readonly FiriosSuperLightContext _context;
 
-    public Repository(FiriosSuperLightContext context)
+    public UserHelperService(FiriosSuperLightContext context)
     {
         _context = context;
     }

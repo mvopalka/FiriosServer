@@ -1,6 +1,6 @@
-﻿using Firios.Entity.Base;
+﻿using FiriosServer.Entity.Base;
 
-namespace Firios.Entity;
+namespace FiriosServer.Entity;
 
 public class UserBrowserData : EntityBase<Guid>
 {

@@ -1,4 +1,4 @@
-﻿namespace Firios.Model;
+﻿namespace FiriosServer.Models;
 
 public class NotifierModel
 {

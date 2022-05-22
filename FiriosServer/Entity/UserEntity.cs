@@ -1,9 +1,9 @@
-﻿using Firios.Entity.Base;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using FiriosServer.Entity.Base;
+using Microsoft.EntityFrameworkCore;
 
-namespace Firios.Entity;
+namespace FiriosServer.Entity;
 [Index(nameof(Email), IsUnique = true)]
 public class UserEntity : EntityBase<Guid>
 {

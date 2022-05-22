@@ -1,11 +1,11 @@
 ﻿#nullable disable
-using Firios.Data;
-using Firios.Entity;
 using FiriosServer.Data;
 using FiriosServer.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using FiriosServer.Entity;
+using FiriosServer.Services;
 
 namespace FiriosServer.Controllers
 {
@@ -13,13 +13,13 @@ namespace FiriosServer.Controllers
     {
         // TODO: Check all password inputs for safe password
         private readonly FiriosSuperLightContext _context;
-        private readonly FiriosAuthenticationService _authenticationService;
+        private readonly FiriosUserAuthenticationService _userAuthenticationService;
         private string passwordRegex = @"(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$";
 
-        public UserController(FiriosSuperLightContext context, FiriosAuthenticationService authenticationService)
+        public UserController(FiriosSuperLightContext context, FiriosUserAuthenticationService userAuthenticationService)
         {
             _context = context;
-            _authenticationService = authenticationService;
+            _userAuthenticationService = userAuthenticationService;
         }
 
         public IActionResult Login()
@@ -80,7 +80,7 @@ namespace FiriosServer.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.HASIC,
@@ -101,7 +101,7 @@ namespace FiriosServer.Controllers
         public async Task<IActionResult> Details(Guid? id)
         {
             // TODO Chose permissions for this action
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.HASIC,
@@ -138,7 +138,7 @@ namespace FiriosServer.Controllers
             {
                 return View();
             }
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -164,7 +164,7 @@ namespace FiriosServer.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Login));
             }
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -201,7 +201,7 @@ namespace FiriosServer.Controllers
         // GET: User/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -230,7 +230,7 @@ namespace FiriosServer.Controllers
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Titules,FirstName,MiddleName,SecondName,Email,Password,ConfirmPassword,Position")] UserEditModel userEditModel)
         {
             // TODO let user to change for example password
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -301,7 +301,7 @@ namespace FiriosServer.Controllers
         // GET: User/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -330,7 +330,7 @@ namespace FiriosServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            if (!_authenticationService.ValidateUser(Request,
+            if (!_userAuthenticationService.ValidateUser(Request,
                     new List<string>()
                     {
                         FiriosConstants.VELITEL_JEDNOTKY
@@ -404,7 +404,7 @@ namespace FiriosServer.Controllers
 
         public async Task<IActionResult> ChangeUserPassword()
         {
-            var user = _authenticationService.GetUserFromRequest(Request);
+            var user = _userAuthenticationService.GetUserFromRequest(Request);
             if (user == null)
             {
                 return RedirectToAction(nameof(Login));
@@ -420,7 +420,7 @@ namespace FiriosServer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUserPassword([Bind("PasswordOld,Password,ConfirmPassword")] UserChangePasswordModel changePasswordModel)
         {
-            var user = _authenticationService.GetUserFromRequest(Request);
+            var user = _userAuthenticationService.GetUserFromRequest(Request);
             if (user == null)
             {
                 return RedirectToAction(nameof(Login));

@@ -1,6 +1,6 @@
-﻿using Firios.Model.WithoutList;
+﻿using FiriosServer.Models.WithoutList;
 
-namespace Firios.Model;
+namespace FiriosServer.Models.WebSocketsModels;
 
 public class WebSocketModel
 {

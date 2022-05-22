@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace FiriosServer.Data;
+namespace FiriosServer.Services;
 
 public class FiriosSourceAuthentificationService
 {

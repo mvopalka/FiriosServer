@@ -1,18 +1,17 @@
-using Firios.Data;
-using Firios.Mapper;
-using FiriosServer;
 using FiriosServer.Data;
+using FiriosServer.Middleware;
+using FiriosServer.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlite("Data Source=Firios.db;"));
 builder.Services.AddDbContext<FiriosSuperLightContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
-builder.Services.AddTransient<Repository>();
-builder.Services.AddSingleton<WebSocketFiriosManager>();
-builder.Services.AddSingleton<IncidentId>();
+builder.Services.AddTransient<UserHelperService>();
+builder.Services.AddSingleton<WebSocketFiriosManagerService>();
+builder.Services.AddSingleton<IncidentIdService>();
 builder.Services.AddSingleton<FiriosSourceAuthentificationService>();
-builder.Services.AddTransient<FiriosAuthenticationService>();
+builder.Services.AddTransient<FiriosUserAuthenticationService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
