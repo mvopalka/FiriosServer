@@ -1,0 +1,89 @@
+﻿@model IEnumerable<Firios.Entity.IncidentEntity>
+
+@{
+    ViewData["Title"] = "Výjezdy";
+}
+
+<h1>Výjezdy</h1>
+
+<p>
+    @*<a asp-action="Create">Create New</a>*@
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th class="table-3-hide">
+                @Html.DisplayNameFor(model => model.Mpd)
+            </th>
+            <th class="table-4-hide">
+                @Html.DisplayNameFor(model => model.Region)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th class="table-3-hide">
+                @Html.DisplayNameFor(model => model.SubType)
+            </th>
+            <th class="table-5-hide">
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.ObjectName)
+            </th>
+            <th class="table-1-hide">
+                @Html.DisplayNameFor(model => model.AdditionalInformation)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th class="table-6-hide">
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td class="table-3-hide">
+                @Html.DisplayFor(modelItem => item.Mpd)
+            </td>
+            <td class="table-4-hide">
+                @Html.DisplayFor(modelItem => item.Region)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td class="table-3-hide">
+                @Html.DisplayFor(modelItem => item.SubType)
+            </td>
+            <td class="table-5-hide">
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => item.ObjectName)
+            </td>
+            <td class="table-1-hide">
+                @Html.DisplayFor(modelItem => item.AdditionalInformation)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => item.Level)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td class="table-6-hide">
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+@*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+*@                <a asp-action="Details" asp-route-id="@item.Id">Detail</a> @*|*@
+@*                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+*@            </td>
+        </tr>
+}
+    </tbody>
+</table>

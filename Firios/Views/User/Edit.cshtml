@@ -1,0 +1,85 @@
+﻿@using Firios.Data
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Firios.Models.InputModels.UserEditModel
+
+@{
+    ViewData["Title"] = "Editovat";
+}
+
+<h1>Editovat</h1>
+
+<h4>Uživatele</h4>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Titules" class="control-label"></label>
+                <input asp-for="Titules" class="form-control" />
+                <span asp-validation-for="Titules" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MiddleName" class="control-label"></label>
+                <input asp-for="MiddleName" class="form-control" />
+                <span asp-validation-for="MiddleName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SecondName" class="control-label"></label>
+                <input asp-for="SecondName" class="form-control" />
+                <span asp-validation-for="SecondName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Position" class="control-label"></label>
+                <select asp-for="Position" class="form-control">
+                    <option value="@FiriosConstants.HASIC">@FiriosConstants.HASIC</option>
+                    <option value="@FiriosConstants.STROJNIK">@FiriosConstants.STROJNIK</option>
+                    <option value="@FiriosConstants.VELITEL">@FiriosConstants.VELITEL</option>
+@*                    <option value="@FiriosConstants.MONITOR">@FiriosConstants.MONITOR</option>
+*@                    <option value="@FiriosConstants.VELITEL_JEDNOTKY">@FiriosConstants.VELITEL_JEDNOTKY</option>
+                </select>
+                <span asp-validation-for="Position" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Uložit" class="btn btn-primary" style="margin-top: 8px;"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Zpět na uživatele</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Firios.Entity.UserEntity>
+
+@{
+    ViewData["Title"] = "Uživatelé";
+}
+
+<h1>Uživatelé</h1>
+
+@if (Context.Items.ContainsKey("admin"))
+{
+    <p>
+        <a asp-action="Create">Vytvořit nového uživatele</a>
+    </p>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.Titules)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.MiddleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecondName)
+            </th>
+            <th class="table-3-hide">
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th class="table-4-hide">
+                @Html.DisplayNameFor(model => model.Position)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => item.Titules)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => item.MiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SecondName)
+            </td>
+            <td class="table-3-hide">
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td class="table-4-hide">
+                @Html.DisplayFor(modelItem => item.Position)
+            </td>
+            <td>
+            @if (Context.Items.ContainsKey("admin"))
+            {
+                <a asp-action="Edit" asp-route-id="@item.Id">Editovat</a> <span>|</span>
+            }
+            <a asp-action="Details" asp-route-id="@item.Id">Detail</a>
+            @if (Context.Items.ContainsKey("admin"))
+            {
+            <span>|</span><a asp-action="Delete" asp-route-id="@item.Id">Smazat</a>
+            }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

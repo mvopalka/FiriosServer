@@ -1,0 +1,180 @@
+﻿@using Microsoft.CodeAnalysis.Scripting
+@model Firios.Entity.IncidentEntity
+
+@{
+    ViewData["Title"] = "Výjezd";
+}
+<h3 id="state">@ViewData["Title"]</h3>
+
+<style>
+    .container {
+        width:100%;
+        max-width:none;
+        padding-left:1rem;
+        padding-right: 1rem;
+    }
+    dl {
+        margin-bottom: auto;
+    }
+    .bg-success, .bg-warning ,.bg-danger{
+        border-radius: 5px;
+        margin: 1rem 0rem;
+        padding-right: 0.5rem
+    }
+    .card {
+        display:inline-block;
+        width: 7rem;
+        margin: 0.5rem 0rem 0.5rem 0.5rem;
+    }
+    .card-body {
+        padding: 0.5rem;
+
+    }
+    dd {
+        margin-bottom: auto;
+    }
+
+
+</style>
+
+@*<table class="table w-100 d-block d-md-table">
+    <thead>
+        <tr>
+            <th class="table-4-hide">
+                @Html.DisplayNameFor(model => model.Mpd)
+            </th>
+            <th class="table-5-hide">
+                @Html.DisplayNameFor(model => model.Region)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th class="table-5-hide">
+                @Html.DisplayNameFor(model => model.SubType)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th class="table-6-hide">
+                @Html.DisplayNameFor(model => model.ObjectName)
+            </th>
+            <th class="table-3-hide">
+                @Html.DisplayNameFor(model => model.AdditionalInformation)
+            </th>
+            <th class="table-2-hide">
+                @Html.DisplayNameFor(model => model.Level)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="table-4-hide">
+                @Html.DisplayFor(modelItem => Model.Mpd)
+            </td>
+            <td class="table-5-hide">
+                @Html.DisplayFor(modelItem => Model.Region)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Address)
+            </td>
+            <td class="table-5-hide">
+                @Html.DisplayFor(modelItem => Model.SubType)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => Model.Type)
+            </td>
+            <td class="table-6-hide">
+                @Html.DisplayFor(modelItem => Model.ObjectName)
+            </td>
+            <td class="table-3-hide">
+                @Html.DisplayFor(modelItem => Model.AdditionalInformation)
+            </td>
+            <td class="table-2-hide">
+                @Html.DisplayFor(modelItem => Model.Level)
+            </td>
+        </tr>
+    </tbody>
+</table>*@
+
+<hr/>
+
+<div>
+    <div class="content">
+        <div class="bg-success" id="yes"></div>
+        <div class="bg-warning" id="on_place"></div>
+        <div class="bg-danger" id="no"></div>
+    </div>
+</div>
+<div>
+    @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+*@</div>
+
+
+@section Scripts {
+    <script>
+        const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+        var socket;
+
+        var state = 0;
+
+        function socketOnMessage (message) {
+            data = JSON.parse(message.data);
+            console.log(data);
+            if (data["Status"] != undefined && data["Status"] != null) {
+                if (data["Status"] === "ok") {
+                    document.getElementById("state").classList.remove("text-danger");
+                    document.getElementById("state").classList.add("text-success");
+                } else {
+                    document.getElementById("state").classList.remove("text-success");
+                    document.getElementById("state").classList.add("text-danger");
+                }
+
+            }else if (data["IncidentWithoutList"] != undefined && data["IncidentWithoutList"] != null) {
+                document.getElementById("yes").innerHTML = null;
+                document.getElementById("no").innerHTML = null;
+                document.getElementById("on_place").innerHTML = null;
+            } else {
+                renderCard(data);
+            }
+        }
+
+        function socketOnOpen() {
+            state = 0;
+            socket.send(getSession());
+        }
+
+        function socketOnClose(e) {
+            if (state === 2) {
+                return;
+            }
+            console.log("Web socket was closed", e.reason);
+            document.getElementById("state").classList.remove("text-success");
+            document.getElementById("state").classList.add("text-danger");
+            state = 1;
+            setTimeout(createWebSocket, 15000);
+        }
+
+        function socketOnError(e) {
+            if (state === 1) {
+                return;
+            }
+            console.error("There was an error in websocket", e.message);
+            document.getElementById("state").classList.remove("text-success");
+            document.getElementById("state").classList.add("text-danger");
+            state = 2;
+            setTimeout(createWebSocket, 15000);
+        }
+
+        function createWebSocket() {
+            socket = new WebSocket(`wss://${self.location.host}/UserRegistration`);
+
+            socket.onmessage = socketOnMessage;
+            socket.onopen = socketOnOpen;
+            socket.onclose = socketOnClose;
+            socket.onerror = socketOnError;
+        }
+
+        createWebSocket();
+
+    </script>
+}
