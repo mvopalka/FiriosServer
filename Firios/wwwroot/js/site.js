@@ -141,47 +141,6 @@ function arrayBufferToBase64(buffer) {
     return window.btoa(binary);
 }
 
-renderCard = (data) => {
-    const regexExp = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
-    if (!regexExp.test(data.Id)) {
-        return null;
-    }
-    try {
-        document.getElementById(data.Id).remove();
-    } catch (e) {
-
-    }
-    dt_name = document.createElement("dt");
-    dt_name.innerText = "Jméno:";
-    dd_name = document.createElement("dd");
-    dd_name.innerText = data.Name;
-    dt_surname = document.createElement("dt");
-    dt_surname.innerText = "Příjmení:";
-    dd_surname = document.createElement("dd");
-    dd_surname.innerText = data.Surname;
-    dt_position = document.createElement("dt");
-    dt_position.innerText = "Pozice:";
-    dd_position = document.createElement("dd");
-    dd_position.innerText = data.Position;
-    dl = document.createElement("dl");
-    dl.appendChild(dt_name);
-    dl.appendChild(dd_name);
-    dl.appendChild(dt_surname);
-    dl.appendChild(dd_surname);
-    dl.appendChild(dt_position);
-    dl.appendChild(dd_position);
-
-    card = document.createElement("div");
-    card.classList.add("card");
-    card.id = data.Id;
-    cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-
-    cardBody.appendChild(dl);
-    card.appendChild(cardBody);
-    document.getElementById(data.Action).appendChild(card);
-};
-
 const session_name = "Session";
 
 if (getSession() === "") {
