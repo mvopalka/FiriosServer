@@ -9,6 +9,7 @@ public class AuthMiddleware
     private const string pwa_serverkey_string = "PWA_ServerKey";
     private const string admin_string = "admin";
     private const string SESSION_NAME = "Session";
+    private const string monitor_string = "monitor";
     private readonly RequestDelegate _next;
 
     public AuthMiddleware(RequestDelegate next)
@@ -39,6 +40,13 @@ public class AuthMiddleware
                     if (!context.Items.ContainsKey(admin_string))
                     {
                         context.Items.Add(admin_string, true);
+                    }
+                }
+                if (userBrowserData.UserEntity.Position == FiriosConstants.MONITOR)
+                {
+                    if (!context.Items.ContainsKey(monitor_string))
+                    {
+                        context.Items.Add(monitor_string, true);
                     }
                 }
             }

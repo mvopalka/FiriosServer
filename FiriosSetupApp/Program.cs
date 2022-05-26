@@ -40,5 +40,4 @@ var config = new FiriosConfig
 
 Console.WriteLine(JsonSerializer.Serialize(config));
 
-var ecdsa1 = ECDsa.Create(ECCurve.NamedCurves.nistP521);
-//ecdsa1.ImportFromPem(config.DSA.PrivateKey);
+Console.ReadKey();

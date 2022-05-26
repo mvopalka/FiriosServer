@@ -6,6 +6,7 @@ using Firios.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
+using Firios.Extension;
 
 namespace Firios.Controllers
 {
@@ -54,6 +55,10 @@ namespace Firios.Controllers
                     _context.Add(browserData);
                     _context.Update(userEntity);
                     await _context.SaveChangesAsync();
+                    if (userEntity.Position == FiriosConstants.MONITOR)
+                    {
+                        return RedirectToAction(nameof(HomeController.InteractiveIncident), FiriosExtensions.GetControllerName<HomeController>());
+                    }
                     return RedirectToAction(nameof(Index));
 
                 }

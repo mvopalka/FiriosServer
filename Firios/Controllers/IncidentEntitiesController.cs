@@ -54,18 +54,18 @@ namespace Firios.Controllers
         //}
 
         // GET: api/IncidentEntities/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<IncidentModel>> GetIncidentEntity(Guid id)
-        {
-            var incidentModel = await _userHelperService.GetIncidentModelById(id);
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<IncidentModel>> GetIncidentEntity(Guid id)
+        //{
+        //    var incidentModel = await _userHelperService.GetIncidentModelById(id);
 
-            if (incidentModel == null)
-            {
-                return NotFound();
-            }
+        //    if (incidentModel == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return incidentModel;
-        }
+        //    return incidentModel;
+        //}
         // POST: api/IncidentEntities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
