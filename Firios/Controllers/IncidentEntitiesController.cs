@@ -1,7 +1,4 @@
-﻿using System.Net.WebSockets;
-using System.Text;
-using System.Text.RegularExpressions;
-using Firios.Data;
+﻿using Firios.Data;
 using Firios.Entity;
 using Firios.Models;
 using Firios.Models.WebSocketsModels;
@@ -10,6 +7,9 @@ using Firios.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
+using System.Net.WebSockets;
+using System.Text;
+using System.Text.RegularExpressions;
 using WebPush;
 
 namespace Firios.Controllers
@@ -234,7 +234,7 @@ namespace Firios.Controllers
                 return;
             }
 
-            var id = new Guid();
+            var id = Guid.NewGuid();
             _managerService.AddNew(id, webSocket);
             var serverMsg = Encoding.UTF8.GetBytes((new WebSocketModel { Status = "ok" }).ToJson());
 
