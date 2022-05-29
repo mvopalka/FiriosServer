@@ -5,6 +5,7 @@ namespace Firios.Entity;
 
 public class IncidentEntity : EntityBase<Guid>
 {
+    [DisplayName("DP")]
     public string Mpd { get; set; } = string.Empty;
     public string Region { get; set; } = string.Empty;
     [DisplayName("Adresa")]
